@@ -6,15 +6,18 @@ import { MongoClient } from "mongodb";
 class dbClient {
     constructor() {
         // replace with de conexion to mongodb
-        const queryString = "mongodb://localhost:27017";
+        const queryString = process.env.MONGO_URI;
         this.client = new MongoClient(queryString);
         this.db = null;
+
+        this.connectBD();
     }
 
     async connectBD() {
         try {
             await this.client.connect();
-            this.db = this.client.db("miBaseDeDatos"); // replace the name with the db name
+            this.db = this.client.db("TicTask"); 
+            console.log("✅ Conectado a MongoDB Atlas");
             return this.db;
         } catch (e) {
             console.error(" Error conectando a MongoDB:", e);
