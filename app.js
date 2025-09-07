@@ -1,25 +1,31 @@
-import dotenv from "dotenv";
+const express = require("express");
+const dotenv = require("dotenv");
 dotenv.config();
-import express from "express";
-import taskRoutes from './backend/routes/task.js';
-import userRoutes from './backend/routes/user.js';
+
+const { connectDB } = require("./backend/config/dbClient.js");
+
+const routes = require("./backend/routes/routes.js");
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
-app.use('/task', taskRoutes);
-app.use('/user', userRoutes);
+
+app.use("/api", routes);
 
 try {
     const port = process.env.PORT || 3000;
-    app.listen(port,() => {console.log("Server is running on http://localhost:" + port)});
-}
-catch(err) {
+    app.listen(port, () => {
+        console.log("Server running at http://localhost:" + port);
+    });
+
+    connectDB();
+} catch (err) {
     console.error(err);
 }
-app.get("/", (req, res) => {
 
+
+app.get("/", (req, res) => {
     res.send("index");
-})
+});

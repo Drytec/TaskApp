@@ -1,52 +1,51 @@
-// controllers/UserController.js
-import UserModel from "../models/user.js";
-import jwt from "jsonwebtoken";
-import bcrypt from "bcrypt";
 
-class UserController {
-    constructor() {}
+const GlobalController = require("./globalController.js");
+const UserDAO = require("../DAO/userDAO.js");
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+const User = require("../models/User");
 
-    async registerUser(req, res) {
-        try {
-            const { username, email, password } = req.body;
 
-            // Verificar si ya existe
-            const existing = await UserModel.getUserByEmail(email);
-            if (existing) {
-                return res.status(400).json({ error: "El usuario ya existe" });
-            }
 
-            // Crear usuario
-            const user = await UserModel.createUser({ username, email, password });
-
-            res.status(201).json({ message: "Usuario registrado correctamente" });
-        } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: "Error en el servidor" });
-        }
+class UserController extends GlobalController {
+    constructor() {
+        super(UserDAO);
     }
+    registerUser = async (req, res) => {
+        try {
+            const { email, password, name, lastname, age } = req.body;
 
-    async loginUser(req, res) {
+            const hashedPassword = await bcrypt.hash(password, 10);
+
+            const user = new User({ email, password: hashedPassword,name,lastname, age });
+            await user.save();
+
+            res.status(201).json({ message: "Usuario registrado exitosamente" });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    };
+    loginUser = async (req, res) => {
         try {
             const { email, password } = req.body;
 
-            const user = await UserModel.getUserByEmail(email);
-            if (!user) return res.status(400).json({ error: "Credenciales inválidas" });
+            const user = await User.findOne({ email });
+            if (!user) return res.status(400).json({ error: "Usuario no encontrado" });
 
-            const valid = await bcrypt.compare(password, user.password);
-            if (!valid) return res.status(400).json({ error: "Credenciales inválidas" });
+            const isPasswordValid = await bcrypt.compare(password, user.password);
+            if (!isPasswordValid) return res.status(400).json({ error: "Contraseña incorrecta" });
 
-            // Crear token
-            const token = jwt.sign({ id: user._id, email: user.email }, process.env.JWT_SECRET, {
-                expiresIn: "1d"
-            });
+            const token = jwt.sign(
+                { id: user._id, email: user.email },
+                process.env.JWT_SECRET,
+                { expiresIn: process.env.JWT_EXPIRES || "1h" }
+            );
 
-            res.status(200).json({ token });
+            res.json({ token });
         } catch (err) {
-            console.error(err);
-            res.status(500).json({ error: "Error al iniciar sesión" });
+            res.status(500).json({ error: err.message });
         }
-    }
-}
+    };
 
-export default new UserController();
+}
+module.exports = new UserController();
