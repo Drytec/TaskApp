@@ -1,15 +1,11 @@
 const express = require("express");
 const dotenv = require("dotenv");
 dotenv.config();
-import express from "express";
-import taskRoutes from './backend/routes/task.js';
-import path from "path";
-import { fileURLToPath } from "url";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const taskRoutes = require("./backend/routes/task.js");
+const path = require("path");
 
-console.log("__dirname:", __dirname); // Para debugging
+
 
 const app = express();
 
@@ -45,6 +41,18 @@ app.get("/login", (req, res) => {
 app.get("/signup", (req, res) => {
     const filePath = path.join(__dirname, "Front", "View", "signup.html");
     console.log("Serving signup from:", filePath);
+    res.sendFile(filePath);
+});
+// Ruta para forgot password
+app.get("/forgot", (req, res) => {
+    const filePath = path.join(__dirname, "Front", "View", "forgot.html");
+    console.log("Serving forgot from:", filePath);
+    res.sendFile(filePath);
+});
+// Ruta para reset password
+app.get("/reset", (req, res) => {
+    const filePath = path.join(__dirname, "Front", "View", "reset.html");
+    console.log("Serving reset from:", filePath);
     res.sendFile(filePath);
 });
 
