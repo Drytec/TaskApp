@@ -1,48 +1,51 @@
 // backend/controllers/authController.js
 const crypto = require("crypto");
-const User = require("../models/User");
+const User = require("../models/user");
 const sendEmail = require("../utils/mailer");
 const bcrypt = require("bcrypt");
 
 
 
 exports.requestPasswordReset = async (req, res) => {
+    console.log("🔑 Password reset requested for:", req.body.email);
     try {
         const { email } = req.body;
         const user = await User.findOne({ email });
 
         if (!user) {
-
+            console.log("❌ User not found:", email);
             return res.status(202).json({ message: "Si el correo existe, se enviará un enlace de recuperación." });
         }
 
-
+        console.log("✅ User found:", user.email);
+        
         const resetToken = crypto.randomBytes(32).toString("hex");
-
-
         const tokenHash = crypto.createHash("sha256").update(resetToken).digest("hex");
 
         user.resetPasswordToken = tokenHash;
-        user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 hora
+        user.resetPasswordExpires = Date.now() + 60 * 60 * 1000;
         await user.save();
 
-        const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:3000"}/reset?token=${resetToken}`;
+        const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:5100"}/reset-password?token=${resetToken}`;
+        console.log("🔗 Reset URL:", resetUrl);
 
         const html = `
-      <p>Hola ${user.name},</p>
-      <p>Has solicitado restablecer tu contraseña. Haz clic en el enlace siguiente (expira en 1 hora):</p>
-      <a href="${resetUrl}">${resetUrl}</a>
-      <p>Si no solicitaste esto, ignora este correo.</p>
-    `;
-        await sendEmail(user.email, "Recuperación de contraseña", html);
+            <p>Hola ${user.name},</p>
+            <p>Has solicitado restablecer tu contraseña. Haz clic en el enlace siguiente (expira en 1 hora):</p>
+            <a href="${resetUrl}">${resetUrl}</a>
+            <p>Si no solicitaste esto, ignora este correo.</p>
+        `;
+
+        console.log("📧 Attempting to send email to:", user.email);
+        await sendEmail(user.email, "Recuperación de contraseña - TaskApp", html);
+        console.log("✅ Email sent successfully");
 
         return res.status(200).json({ message: "Correo de recuperación enviado" });
     } catch (err) {
-        console.error("requestPasswordReset error:", err);
+        console.error("❌ requestPasswordReset error:", err);
         return res.status(500).json({ error: "Inténtalo de nuevo más tarde" });
     }
 };
-
 
 exports.resetPassword = async (req, res) => {
     try {
