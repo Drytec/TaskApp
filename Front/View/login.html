@@ -75,8 +75,9 @@
     </div>
 
     <script>
-        // Este script es solo para autenticar con un solo usuario, fue para hacer la prueba y poder ver 
-        // el dashboard, una vez estén las funciones de autenticación, se puede eliminar.
+        // This script is only to authenticate with a single user,
+        // it was used to test and be able to see the dashboard,
+        // once authentication functions are ready, it can be removed.
         document.addEventListener('DOMContentLoaded', function() {
             const loginForm = document.querySelector('.login-form');
             const loginBtn = document.getElementById('login-btn');
@@ -85,7 +86,7 @@
             const toast = document.getElementById('toast');
             const toastMessage = document.querySelector('.toast-message');
 
-            // Función para mostrar toast
+            // Function to show toast
             function showToast(message, isError = false) {
                 toastMessage.textContent = message;
                 toast.className = `toast ${isError ? 'error' : ''}`;
@@ -96,7 +97,7 @@
                 }, 3000);
             }
 
-            // Función para mostrar/ocultar spinner
+            // Function to show/hide spinner
             function toggleSpinner(show) {
                 if (show) {
                     loginSpinner.classList.remove('hidden');
@@ -109,13 +110,13 @@
                 }
             }
 
-            // Función para validar email
+            // Function to validate email
             function validateEmail(email) {
                 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
                 return emailRegex.test(email);
             }
 
-            // Función para limpiar errores
+            // Function to clear errors
             function clearErrors() {
                 document.querySelectorAll('.error-message').forEach(error => {
                     error.classList.remove('show');
@@ -123,14 +124,14 @@
                 });
             }
 
-            // Función para mostrar error en campo específico
+            // Function to show error on specific field
             function showFieldError(fieldId, message) {
                 const errorElement = document.getElementById(fieldId + '-error');
                 errorElement.textContent = message;
                 errorElement.classList.add('show');
             }
 
-            // Manejar envío del formulario
+            // Handle form submission
             loginForm.addEventListener('submit', async function(e) {
                 e.preventDefault();
                 
@@ -139,56 +140,56 @@
                 const email = document.getElementById('email').value.trim();
                 const password = document.getElementById('password').value;
 
-                // Validaciones básicas
+                // Basic validations
                 if (!email) {
-                    showFieldError('email', 'El correo electrónico es requerido');
+                    showFieldError('email', 'Email is required');
                     return;
                 }
 
                 if (!validateEmail(email)) {
-                    showFieldError('email', 'Ingresa un correo electrónico válido');
+                    showFieldError('email', 'Enter a valid email');
                     return;
                 }
 
                 if (!password) {
-                    showFieldError('password', 'La contraseña es requerida');
+                    showFieldError('password', 'Password is required');
                     return;
                 }
 
                 if (password.length < 6) {
-                    showFieldError('password', 'La contraseña debe tener al menos 6 caracteres');
+                    showFieldError('password', 'Password must be at least 6 characters');
                     return;
                 }
 
-                // Mostrar spinner
+                // Show spinner
                 toggleSpinner(true);
 
                 try {
-                    // Simular llamada a API (por ahora solo simulación)
-                    // En un proyecto real, aquí harías la llamada al backend
+                    // Simulate API call (currently just simulation)
+                    // In a real project, here you would call the backend
                     await new Promise(resolve => setTimeout(resolve, 1500));
 
-                    // Simular validación de credenciales
-                    // En un proyecto real, esto vendría del servidor
+                    // Simulate credential validation
+                    // In a real project, this would come from the server
                     if (email === 'admin@test.com' && password === '123456') {
-                        showToast('¡Inicio de sesión exitoso!');
+                        showToast('Login successful!');
                         
-                        // Redirigir al dashboard después de un breve delay
+                        // Redirect to dashboard after a brief delay
                         setTimeout(() => {
                             window.location.href = '/welcome-dashboard';
                         }, 1000);
                     } else {
-                        showToast('Credenciales incorrectas. Intenta con admin@test.com / 123456', true);
+                        showToast('Incorrect credentials. Try admin@test.com / 123456', true);
                         toggleSpinner(false);
                     }
                 } catch (error) {
-                    console.error('Error en login:', error);
-                    showToast('Error al iniciar sesión. Intenta nuevamente.', true);
+                    console.error('Login error:', error);
+                    showToast('Error logging in. Please try again.', true);
                     toggleSpinner(false);
                 }
             });
 
-            // Limpiar errores cuando el usuario empiece a escribir
+            // Clear errors when user starts typing
             document.getElementById('email').addEventListener('input', function() {
                 const errorElement = document.getElementById('email-error');
                 errorElement.classList.remove('show');

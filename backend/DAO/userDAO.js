@@ -1,10 +1,12 @@
-const User = require("../models/user.js");
-const GlobalDAO = require("./globalDAO.js");
+const User = require("../models/user.js");  // Import the User Mongoose model
+const GlobalDAO = require("./globalDAO.js"); // Import the generic GlobalDAO class
 
-class UserDAO extends GlobalDAO{
+// UserDAO extends GlobalDAO to handle User-specific database operations
+class UserDAO extends GlobalDAO {
     constructor() {
-        super(User);
+        super(User);  // Pass the User model to the parent class constructor
     }
 }
 
-module.exports = new UserDAO();
+module.exports = new UserDAO(); // Export an instance of UserDAO
+

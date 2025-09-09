@@ -10,16 +10,19 @@
     <!-- Header -->
     <header class="header">
         <div class="header-left">
+            <!-- App logo -->
             <h1 class="logo">TaskApp</h1>
         </div>
         
         <div class="header-center">
+            <!-- Greeting message -->
             <div class="greeting">
                 <span>Hola, TEST 👋</span>
             </div>
         </div>
         
         <div class="header-right">
+            <!-- User menu with dropdown toggle -->
             <div class="user-menu" onclick="toggleDropdown()">
                 <div class="user-avatar">TEST</div>
                 <span class="user-name">Test</span>
@@ -27,15 +30,18 @@
                 
                 <!-- Dropdown Menu -->
                 <div class="dropdown-menu" id="userDropdown">
+                    <!-- Navigate to user profile -->
                     <div class="dropdown-item" onclick="goToProfile()">
                         <span class="dropdown-icon-item">👤</span>
                         <span>Mi perfil</span>
                     </div>
+                    <!-- Navigate to settings -->
                     <div class="dropdown-item" onclick="goToSettings()">
                         <span class="dropdown-icon-item">⚙️</span>
                         <span>Configuración</span>
                     </div>
                     <div class="dropdown-divider"></div>
+                    <!-- Logout action -->
                     <div class="dropdown-item logout" onclick="logout()">
                         <span class="dropdown-icon-item">🚪</span>
                         <span>Cerrar sesión</span>
@@ -47,13 +53,13 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Welcome Section -->
+        <!-- Welcome Section with user-specific message -->
         <div class="welcome-section">
             <h1 class="welcome-title">¡Bienvenido, Test!</h1>
             <p class="welcome-subtitle">Aquí tienes un resumen de tus tareas de hoy</p>
         </div>
 
-        <!-- Stats Cards -->
+        <!-- Stats Cards showing task counts -->
         <div class="stats-container">
             <div class="stat-card por-hacer">
                 <div class="stat-icon">📋</div>
@@ -74,7 +80,7 @@
             </div>
         </div>
 
-        <!-- Action Cards -->
+        <!-- Action Cards for navigation -->
         <div class="action-cards">
             <div class="action-card">
                 <div class="action-icon ver-tareas">📊</div>
@@ -95,32 +101,34 @@
             </div>
         </div>
 
-        <!-- Quick Add Section -->
+        <!-- Quick Add Section for fast task creation -->
         <div class="quick-add-section">
             <div class="quick-add-header">
                 <span class="quick-add-icon">⚡</span>
                 <h3>Agregar tarea rápida</h3>
             </div>
             <div class="quick-add-form">
+                <!-- Input for quick task entry -->
                 <input 
                     type="text" 
                     class="quick-input" 
                     placeholder="¿Qué necesitas hacer hoy?"
                     id="quickTaskInput"
                 >
+                <!-- Button to add the quick task -->
                 <button class="quick-add-btn" onclick="addQuickTask()">Agregar</button>
             </div>
         </div>
     </main>
 
     <script>
-        // Toggle del dropdown menu
+        // Toggle dropdown menu visibility
         function toggleDropdown() {
             const dropdown = document.getElementById('userDropdown');
             dropdown.classList.toggle('show');
         }
 
-        // Cerrar dropdown si se hace clic fuera
+        // Close dropdown if clicking outside of the user menu
         window.onclick = function(event) {
             if (!event.target.matches('.user-menu') && !event.target.closest('.user-menu')) {
                 const dropdown = document.getElementById('userDropdown');
@@ -130,40 +138,40 @@
             }
         }
 
-        // Función de cerrar sesión
+        // Logout function with confirmation and token removal
         function logout() {
             if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
-                // Limpiar localStorage si existe
+                // Clear authentication token from localStorage
                 if (typeof(Storage) !== "undefined") {
                     localStorage.removeItem('authToken');
                 }
-                // Redirigir al login usando la ruta del servidor
+                // Redirect to login page
                 window.location.href = '/login';
             }
         }
 
-        // Función para ir al perfil (placeholder)
+        // Placeholder function to navigate to user profile
         function goToProfile() {
             alert('Función de perfil - próximamente');
         }
 
-        // Función para ir a configuración (placeholder)
+        // Placeholder function to navigate to settings
         function goToSettings() {
             alert('Función de configuración - próximamente');
         }
 
-        // Función para crear nueva tarea
+        // Redirect to dashboard (placeholder for new task creation)
         function createNewTask() {
             window.location.href = '/dashboard';
         }
 
-        // Función para agregar tarea rápida
+        // Add a new quick task from input field
         function addQuickTask() {
             const input = document.getElementById('quickTaskInput');
             const taskText = input.value.trim();
             
             if (taskText) {
-                // Aquí puedes agregar la lógica para guardar la tarea
+                // Placeholder for saving the task (e.g., API call)
                 alert(`Tarea agregada: "${taskText}"`);
                 input.value = '';
             } else {
@@ -171,7 +179,7 @@
             }
         }
 
-        // Permitir agregar tarea con Enter
+        // Allow adding task by pressing Enter key
         document.getElementById('quickTaskInput').addEventListener('keypress', function(e) {
             if (e.key === 'Enter') {
                 addQuickTask();
