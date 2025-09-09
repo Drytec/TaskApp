@@ -17,7 +17,7 @@ app.use("/api", routes);
 
 
 app.use(cors({
-    origin: "*", //this is temporal
+    origin: "https://task-app-front-mu.vercel.app/",
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
