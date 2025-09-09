@@ -4,6 +4,11 @@
     { "src": "public/**/*", "use": "@vercel/static" }
   ],
   "rewrites": [
-    { "source": "/", "destination": "/public/login.html" }
+    { "source": "/", "destination": "/login.html" },
+    { "source": "/signup", "destination": "/signup.html" },
+    { "source": "/dashboard", "destination": "/dashboard.html" },
+    { "source": "/new-task", "destination": "/new-task.html" },
+    { "source": "/password-recovery", "destination": "/password-recovery.html" },
+    { "source": "/welcome-dashboard", "destination": "/welcome-dashboard.html" }
   ]
 }
