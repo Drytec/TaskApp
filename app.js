@@ -7,7 +7,6 @@ const userRoutes = require('./backend/routes/user.js');
 const authRoutes = require('./backend/routes/auth.js');
 const path = require('path');
 
-const _dirname = path.dirname(_filename);
 console.log("__dirname:", __dirname);
 
 const app = express();
@@ -50,7 +49,41 @@ app.get("/login", (req, res) => {
   res.sendFile(filePath);
 });
 
-// ... resto de tus rutas ...
+app.get("/signup", (req, res) => {
+  const filePath = path.join(__dirname, "Front", "View", "signup.html");
+  console.log("Serving signup from:", filePath);
+  res.sendFile(filePath);
+});
+
+app.get("/password-recovery", (req, res) => {
+  const filePath = path.join(__dirname, "Front", "View", "password-recovery.html");
+  console.log("Serving password-recovery from:", filePath);
+  res.sendFile(filePath);
+});
+
+app.get("/welcome-dashboard", (req, res) => {
+  const filePath = path.join(__dirname, "Front", "View", "welcome-dashboard.html");
+  console.log("Serving welcome-dashboard from:", filePath);
+  res.sendFile(filePath);
+});
+
+app.get("/dashboard", (req, res) => {
+  const filePath = path.join(__dirname, "Front", "View", "dashboard.html");
+  console.log("Serving dashboard from:", filePath);
+  res.sendFile(filePath);
+});
+
+app.get("/new-task", (req, res) => {
+  const filePath = path.join(__dirname, "Front", "View", "new-task.html");
+  console.log("Serving new-task from:", filePath);
+  res.sendFile(filePath);
+});
+
+app.get("/reset-password", (req, res) => {
+  const filePath = path.join(__dirname, "Front", "View", "reset-password.html");
+  console.log("Serving reset-password from:", filePath);
+  res.sendFile(filePath);
+});
 
 // 404 handler
 app.use((req, res) => {
