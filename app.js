@@ -3,16 +3,14 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const { connectDB } = require("./backend/config/dbClient.js");
 const routes = require("./backend/routes/routes.js");
-const cors = require("cors");
-const express = require("express");
 
 dotenv.config();
 
-
 const app = express();
 
+
 app.use(cors({
-    origin: "https://task-app-front-mu.vercel.app", // 👈 cámbialo luego de pruebas
+    origin: "https://task-app-front-mu.vercel.app", 
     methods: ["GET", "POST", "PUT", "DELETE"],
     allowedHeaders: ["Content-Type", "Authorization"]
 }));
@@ -21,9 +19,6 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use("/api", routes);
-
-
-
 
 try {
     connectDB();
@@ -35,7 +30,6 @@ try {
 } catch (err) {
     console.error("❌ Error starting server:", err);
 }
-
 
 app.get("/", (req, res) => {
     res.send("Backend API is running 🚀");
