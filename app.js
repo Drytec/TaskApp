@@ -2,6 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import taskRoutes from './backend/routes/task.js';
+import userRoutes from './backend/routes/user.js';
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -22,7 +23,8 @@ app.use((req, res, next) => {
 });
 
 // Rutas de backend
-app.use('/task', taskRoutes);
+app.use('/api/tasks', taskRoutes);
+app.use('/api/users', userRoutes);
 
 // Servir archivos estáticos de la carpeta "Front"
 app.use(express.static(path.join(__dirname, "Front")));
@@ -54,6 +56,13 @@ app.get("/password-recovery", (req, res) => {
     res.sendFile(filePath);
 });
 
+// Ruta para welcome-dashboard
+app.get("/welcome-dashboard", (req, res) => {
+    const filePath = path.join(__dirname, "Front", "View", "welcome-dashboard.html");
+    console.log("Serving welcome-dashboard from:", filePath);
+    res.sendFile(filePath);
+});
+
 // Ruta para dashboard
 app.get("/dashboard", (req, res) => {
     const filePath = path.join(__dirname, "Front", "View", "dashboard.html");
@@ -61,8 +70,8 @@ app.get("/dashboard", (req, res) => {
     res.sendFile(filePath);
 });
 
-// Ruta para tasks (vista)
-app.get("/tasks", (req, res) => {
+// Ruta para task
+app.get("/task", (req, res) => {
     const filePath = path.join(__dirname, "Front", "View", "task.html");
     console.log("Serving task from:", filePath);
     res.sendFile(filePath);
@@ -75,7 +84,7 @@ app.use((req, res) => {
 });
 
 try {
-    const port = process.env.PORT || 3000;
+    const port = process.env.PORT || 5100;
     app.listen(port, () => {
         console.log("Server is running on http://localhost:" + port);
     });

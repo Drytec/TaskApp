@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskApp - Dashboard</title>
+    <link rel="stylesheet" href="../CSS/welcome-dashboard.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <h1 class="logo">TaskApp</h1>
+        </div>
+        
+        <div class="header-center">
+            <div class="greeting">
+                <span>Hola, TEST 👋</span>
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <div class="user-menu" onclick="toggleDropdown()">
+                <div class="user-avatar">TEST</div>
+                <span class="user-name">Test</span>
+                <div class="dropdown-icon">▼</div>
+                
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu" id="userDropdown">
+                    <div class="dropdown-item" onclick="goToProfile()">
+                        <span class="dropdown-icon-item">👤</span>
+                        <span>Mi perfil</span>
+                    </div>
+                    <div class="dropdown-item" onclick="goToSettings()">
+                        <span class="dropdown-icon-item">⚙️</span>
+                        <span>Configuración</span>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item logout" onclick="logout()">
+                        <span class="dropdown-icon-item">🚪</span>
+                        <span>Cerrar sesión</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Welcome Section -->
+        <div class="welcome-section">
+            <h1 class="welcome-title">¡Bienvenido, Test!</h1>
+            <p class="welcome-subtitle">Aquí tienes un resumen de tus tareas de hoy</p>
+        </div>
+
+        <!-- Stats Cards -->
+        <div class="stats-container">
+            <div class="stat-card por-hacer">
+                <div class="stat-icon">📋</div>
+                <div class="stat-number">8</div>
+                <div class="stat-label">Por hacer</div>
+            </div>
+
+            <div class="stat-card en-progreso">
+                <div class="stat-icon">⚡</div>
+                <div class="stat-number">3</div>
+                <div class="stat-label">En progreso</div>
+            </div>
+
+            <div class="stat-card completadas">
+                <div class="stat-icon">✅</div>
+                <div class="stat-number">12</div>
+                <div class="stat-label">Completadas</div>
+            </div>
+        </div>
+
+        <!-- Action Cards -->
+        <div class="action-cards">
+            <div class="action-card">
+                <div class="action-icon ver-tareas">📊</div>
+                <h3 class="action-title">Ver mis tareas</h3>
+                <p class="action-description">Revisa, edita y organiza todas tus tareas en una vista completa</p>
+                <a href="/dashboard" class="action-button primary">
+                    📋 Ir a mis tareas
+                </a>
+            </div>
+
+            <div class="action-card">
+                <div class="action-icon nueva-tarea">➕</div>
+                <h3 class="action-title">Nueva tarea</h3>
+                <p class="action-description">Crea una nueva tarea con todos los detalles que necesites</p>
+                <button class="action-button secondary" onclick="createNewTask()">
+                    ✏️ Crear tarea
+                </button>
+            </div>
+        </div>
+
+        <!-- Quick Add Section -->
+        <div class="quick-add-section">
+            <div class="quick-add-header">
+                <span class="quick-add-icon">⚡</span>
+                <h3>Agregar tarea rápida</h3>
+            </div>
+            <div class="quick-add-form">
+                <input 
+                    type="text" 
+                    class="quick-input" 
+                    placeholder="¿Qué necesitas hacer hoy?"
+                    id="quickTaskInput"
+                >
+                <button class="quick-add-btn" onclick="addQuickTask()">Agregar</button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Toggle del dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Cerrar dropdown si se hace clic fuera
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-menu') && !event.target.closest('.user-menu')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+
+        // Función de cerrar sesión
+        function logout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                // Limpiar localStorage si existe
+                if (typeof(Storage) !== "undefined") {
+                    localStorage.removeItem('authToken');
+                }
+                // Redirigir al login usando la ruta del servidor
+                window.location.href = '/login';
+            }
+        }
+
+        // Función para ir al perfil (placeholder)
+        function goToProfile() {
+            alert('Función de perfil - próximamente');
+        }
+
+        // Función para ir a configuración (placeholder)
+        function goToSettings() {
+            alert('Función de configuración - próximamente');
+        }
+
+        // Función para crear nueva tarea
+        function createNewTask() {
+            window.location.href = '/dashboard';
+        }
+
+        // Función para agregar tarea rápida
+        function addQuickTask() {
+            const input = document.getElementById('quickTaskInput');
+            const taskText = input.value.trim();
+            
+            if (taskText) {
+                // Aquí puedes agregar la lógica para guardar la tarea
+                alert(`Tarea agregada: "${taskText}"`);
+                input.value = '';
+            } else {
+                alert('Por favor, escribe una tarea');
+            }
+        }
+
+        // Permitir agregar tarea con Enter
+        document.getElementById('quickTaskInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                addQuickTask();
+            }
+        });
+    </script>
+</body>
+</html>

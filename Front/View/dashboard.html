@@ -3,26 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TaskApp - Dashboard</title>
+    <title>TaskApp - Mis Tareas</title>
     <link rel="stylesheet" href="../CSS/dashboard.css">
 </head>
 <body>
     <!-- Header -->
     <header class="header">
         <div class="header-left">
-            <h1 class="logo">TicTask</h1>
+            <a href="/welcome-dashboard" class="logo-link">
+                <h1 class="logo">TicTask</h1>
+            </a>
         </div>
         
         <div class="header-center">
-            <div class="greeting">
-                <span>Hola, Test👋</span>
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" class="search-input" placeholder="Buscar tareas...">
             </div>
         </div>
         
         <div class="header-right">
+            <button class="new-task-btn">Nueva tarea</button>
             <div class="user-menu">
                 <div class="user-avatar">TEST</div>
-                <span class="user-name">Test</span>
+                <span class="user-name">María José</span>
                 <div class="dropdown-icon">▼</div>
             </div>
         </div>
@@ -30,69 +34,161 @@
 
     <!-- Main Content -->
     <main class="main-content">
-        <!-- Welcome Section -->
-        <div class="welcome-section">
-            <h1 class="welcome-title">¡Bienvenido, Test!</h1>
-            <p class="welcome-subtitle">Aquí tienes un resumen de tus tareas de hoy</p>
-        </div>
-
-        <!-- Stats Cards -->
-        <div class="stats-container">
-            <div class="stat-card por-hacer">
-                <div class="stat-icon">📋</div>
-                <div class="stat-number">8</div>
-                <div class="stat-label">Por hacer</div>
+        <!-- Page Title -->
+        <div class="page-header">
+            <div class="page-title">
+                <span class="title-icon">📋</span>
+                <h1>Mis Tareas</h1>
             </div>
-
-            <div class="stat-card en-progreso">
-                <div class="stat-icon">⚡</div>
-                <div class="stat-number">3</div>
-                <div class="stat-label">En progreso</div>
-            </div>
-
-            <div class="stat-card completadas">
-                <div class="stat-icon">✅</div>
-                <div class="stat-number">12</div>
-                <div class="stat-label">Completadas</div>
+            <div class="view-controls">
+                <button class="view-btn active">📊 Kanban</button>
+                <button class="view-btn">📝 Lista</button>
             </div>
         </div>
 
-        <!-- Action Cards -->
-        <div class="action-cards">
-            <div class="action-card">
-                <div class="action-icon ver-tareas">📊</div>
-                <h3 class="action-title">Ver mis tareas</h3>
-                <p class="action-description">Revisa, edita y organiza todas tus tareas en una vista completa</p>
-                <a href="/task" class="action-button primary">
-                    📋 Ir a mis tareas
-                </a>
+        <!-- Kanban Board -->
+        <div class="kanban-board">
+            <!-- Por hacer Column -->
+            <div class="kanban-column">
+                <div class="column-header por-hacer">
+                    <div class="column-title">
+                        <span class="column-icon">📝</span>
+                        <span>Por hacer</span>
+                    </div>
+                    <span class="task-count">5</span>
+                </div>
+                
+                <div class="column-content">
+                    <div class="task-card">
+                        <h3 class="task-title">Revisar propuesta de cliente</h3>
+                        <p class="task-description">Analizar los requerimientos del nuevo proyecto y preparar respuesta</p>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Hoy 14:30</span>
+                            <span class="task-priority alta">Alta</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
+
+                    <div class="task-card">
+                        <h3 class="task-title">Llamar al proveedor</h3>
+                        <p class="task-description">Confirmar disponibilidad de materiales para el próximo pedido</p>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Mañana 10:00</span>
+                            <span class="task-priority media">Media</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
+
+                    <div class="task-card">
+                        <h3 class="task-title">Actualizar sitio web</h3>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Ayer 16:00</span>
+                            <span class="task-priority baja">Baja</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <div class="action-card">
-                <div class="action-icon nueva-tarea">➕</div>
-                <h3 class="action-title">Nueva tarea</h3>
-                <p class="action-description">Crea una nueva tarea con todos los detalles que necesites</p>
-                <button class="action-button secondary">
-                    ✏️ Crear tarea
-                </button>
-            </div>
-        </div>
+            <!-- En progreso Column -->
+            <div class="kanban-column">
+                <div class="column-header en-progreso">
+                    <div class="column-title">
+                        <span class="column-icon">⚡</span>
+                        <span>En progreso</span>
+                    </div>
+                    <span class="task-count">2</span>
+                </div>
+                
+                <div class="column-content">
+                    <div class="task-card">
+                        <h3 class="task-title">Desarrollar nueva funcionalidad</h3>
+                        <p class="task-description">Implementar sistema de notificaciones push para la aplicación móvil</p>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Viernes 17:00</span>
+                            <span class="task-priority alta">Alta</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
 
-        <!-- Quick Add Section -->
-        <div class="quick-add-section">
-            <div class="quick-add-header">
-                <span class="quick-add-icon">⚡</span>
-                <h3>Agregar tarea rápida</h3>
+                    <div class="task-card">
+                        <h3 class="task-title">Preparar presentación</h3>
+                        <p class="task-description">Slides para la reunión con el equipo directivo</p>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Hoy 18:00</span>
+                            <span class="task-priority media">Media</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="quick-add-form">
-                <input 
-                    type="text" 
-                    class="quick-input" 
-                    placeholder="¿Qué necesitas hacer hoy?"
-                >
-                <button class="quick-add-btn">Agregar</button>
+
+            <!-- Completado Column -->
+            <div class="kanban-column">
+                <div class="column-header completado">
+                    <div class="column-title">
+                        <span class="column-icon">✅</span>
+                        <span>Completado</span>
+                    </div>
+                    <span class="task-count">8</span>
+                </div>
+                
+                <div class="column-content">
+                    <div class="task-card completed">
+                        <h3 class="task-title">Enviar informe mensual</h3>
+                        <p class="task-description">Reporte de métricas y KPIs del mes pasado</p>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Ayer 15:30</span>
+                            <span class="task-priority media">Media</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
+
+                    <div class="task-card completed">
+                        <h3 class="task-title">Reunión con el equipo</h3>
+                        <p class="task-description">Daily standup meeting</p>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Hoy 09:00</span>
+                            <span class="task-priority baja">Baja</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
+
+                    <div class="task-card completed">
+                        <h3 class="task-title">Revisar código</h3>
+                        <div class="task-meta">
+                            <span class="task-time">📅 Ayer 11:15</span>
+                            <span class="task-priority alta">Alta</span>
+                        </div>
+                        <div class="task-actions">
+                            <button class="action-btn edit">✏️</button>
+                            <button class="action-btn delete">🗑️</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </main>
 </body>
-</html>v
+</html>
