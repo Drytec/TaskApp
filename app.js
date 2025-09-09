@@ -3,6 +3,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const taskRoutes = require("./backend/routes/task.js");
+const userRoutes = require("./backend/routes/user.js"); 
 const path = require("path");
 
 
@@ -20,7 +21,7 @@ app.use((req, res, next) => {
 
 // Rutas de backend
 app.use('/task', taskRoutes);
-
+app.use('/api', userRoutes);
 // Servir archivos estáticos de la carpeta "Front"
 app.use(express.static(path.join(__dirname, "Front")));
 
