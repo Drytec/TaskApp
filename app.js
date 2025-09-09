@@ -2,7 +2,6 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import taskRoutes from './backend/routes/task.js';
-import userRoutes from './backend/routes/user.js';
 import path from "path";
 import { fileURLToPath } from "url";
 
@@ -22,9 +21,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Rutas de backend
-app.use('/api/tasks', taskRoutes);
-app.use('/api/users', userRoutes);
+
 
 // Servir archivos estáticos de la carpeta "Front"
 app.use(express.static(path.join(__dirname, "Front")));
@@ -77,6 +74,12 @@ app.get("/task", (req, res) => {
     res.sendFile(filePath);
 });
 
+app.get("/new-task", (req, res) => {
+    const filePath = path.join(__dirname, "Front", "View", "new-task.html");
+    console.log("Serving new-task from:", filePath);
+    res.sendFile(filePath);
+});
+
 // 404 handler
 app.use((req, res) => {
     console.log("404 - Not found:", req.path);
@@ -84,7 +87,7 @@ app.use((req, res) => {
 });
 
 try {
-    const port = process.env.PORT || 5100;
+    const port = process.env.PORT || 3000;
     app.listen(port, () => {
         console.log("Server is running on http://localhost:" + port);
     });

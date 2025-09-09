@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskApp - Nueva tarea</title>
+    <link rel="stylesheet" href="../CSS/new-task.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/welcome-dashboard" class="logo-link">
+                <h1 class="logo">TicTask</h1>
+            </a>
+        </div>
+        
+        <div class="header-right">
+            <div class="user-menu">
+                <div class="user-avatar">MJ</div>
+                <span class="user-name">María José</span>
+                <div class="dropdown-icon">▼</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="form-container">
+            <!-- Header Section -->
+            <div class="form-header">
+                <div class="form-icon">✏️</div>
+                <div class="form-title-section">
+                    <h1 class="form-title">Nueva tarea</h1>
+                    <p class="form-subtitle">Crea una nueva tarea y mantén tu día organizado</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form class="task-form" id="newTaskForm">
+                <!-- Información básica -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <span class="section-icon">📝</span>
+                        <h3 class="section-title">Información básica</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title" class="form-label">
+                            Título <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="title" 
+                                name="title" 
+                                class="form-input" 
+                                placeholder="¿Qué necesitas hacer?"
+                                maxlength="50"
+                                required
+                            >
+                            <span class="char-counter">0/50</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">
+                            Descripción (opcional)
+                        </label>
+                        <div class="input-wrapper">
+                            <textarea 
+                                id="description" 
+                                name="description" 
+                                class="form-textarea" 
+                                placeholder="Agrega más detalles sobre esta tarea..."
+                                maxlength="300"
+                                rows="4"
+                            ></textarea>
+                            <span class="char-counter">0/300</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Programación -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <span class="section-icon">📅</span>
+                        <h3 class="section-title">Programación</h3>
+                    </div>
+
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="date" class="form-label">Fecha</label>
+                            <input 
+                                type="date" 
+                                id="date" 
+                                name="date" 
+                                class="form-input"
+                            >
+                        </div>
+
+                        <div class="form-group">
+                            <label for="time" class="form-label">
+                                Hora <span class="required">*</span>
+                            </label>
+                            <input 
+                                type="time" 
+                                id="time" 
+                                name="time" 
+                                class="form-input"
+                                value="09:33"
+                                required
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estado y prioridad -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <span class="section-icon">⚡</span>
+                        <h3 class="section-title">Estado y prioridad</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">
+                            Estado <span class="required">*</span>
+                        </label>
+                        <div class="radio-group">
+                            <label class="radio-item active">
+                                <input type="radio" name="status" value="por-hacer" checked>
+                                <span class="radio-icon">📝</span>
+                                <span class="radio-label">Por hacer</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="status" value="en-progreso">
+                                <span class="radio-icon">⚡</span>
+                                <span class="radio-label">En progreso</span>
+                            </label>
+                            <label class="radio-item">
+                                <input type="radio" name="status" value="completado">
+                                <span class="radio-icon">✅</span>
+                                <span class="radio-label">Completado</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Prioridad</label>
+                        <div class="priority-group">
+                            <label class="priority-item">
+                                <input type="radio" name="priority" value="alta">
+                                <span class="priority-color alta"></span>
+                                <span class="priority-label">Alta</span>
+                            </label>
+                            <label class="priority-item active">
+                                <input type="radio" name="priority" value="media" checked>
+                                <span class="priority-color media"></span>
+                                <span class="priority-label">Media</span>
+                            </label>
+                            <label class="priority-item">
+                                <input type="radio" name="priority" value="baja">
+                                <span class="priority-color baja"></span>
+                                <span class="priority-label">Baja</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="cancelTask()">
+                        ✕ Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        💾 Guardar tarea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <script>
+        // Contador de caracteres para título
+        document.getElementById('title').addEventListener('input', function() {
+            const counter = this.parentElement.querySelector('.char-counter');
+            counter.textContent = `${this.value.length}/50`;
+        });
+
+        // Contador de caracteres para descripción
+        document.getElementById('description').addEventListener('input', function() {
+            const counter = this.parentElement.querySelector('.char-counter');
+            counter.textContent = `${this.value.length}/300`;
+        });
+
+        // Manejar cambios en radio buttons de estado
+        document.querySelectorAll('input[name="status"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.radio-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.closest('.radio-item').classList.add('active');
+            });
+        });
+
+        // Manejar cambios en radio buttons de prioridad
+        document.querySelectorAll('input[name="priority"]').forEach(radio => {
+            radio.addEventListener('change', function() {
+                document.querySelectorAll('.priority-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                this.closest('.priority-item').classList.add('active');
+            });
+        });
+
+        // Establecer fecha de hoy por defecto
+        document.getElementById('date').value = new Date().toISOString().split('T')[0];
+
+        // Función para volver atrás
+        function goBack() {
+            window.location.href = 'dashboard.html';
+        }
+
+        // Función para cancelar
+        function cancelTask() {
+            if (confirm('¿Estás seguro de que quieres cancelar? Se perderán todos los cambios.')) {
+                window.location.href = 'dashboard.html';
+            }
+        }
+
+        // Manejar envío del formulario
+        document.getElementById('newTaskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(this);
+            const taskData = {
+                title: formData.get('title'),
+                description: formData.get('description'),
+                date: formData.get('date'),
+                time: formData.get('time'),
+                status: formData.get('status'),
+                priority: formData.get('priority')
+            };
+
+            // Aquí puedes agregar la lógica para guardar la tarea
+            console.log('Nueva tarea:', taskData);
+            
+            // Mostrar mensaje de éxito
+            alert(`Tarea "${taskData.title}" creada exitosamente!`);
+            
+            // Redirigir al dashboard
+            window.location.href = 'dashboard.html';
+        });
+    </script>
+</body>
+</html>
