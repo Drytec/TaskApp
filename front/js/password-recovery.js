@@ -1,6 +1,5 @@
 // password-recovery.js
-const API_URL = 'http://localhost:5100/api';
-
+const API_URL = NEX_PUBLIC_API_URL.env; 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');
     const emailInput = document.getElementById('email');

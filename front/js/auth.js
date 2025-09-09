@@ -1,4 +1,4 @@
-const API_URL = 'http://localhost:5100/api'; 
+const API_URL = NEX_PUBLIC_API_URL.env; 
 
 
 
