@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskApp - Nueva tarea</title>
+    <link rel="stylesheet" href="../CSS/new-task.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/welcome-dashboard" class="logo-link">
+                <h1 class="logo">TicTask</h1>
+            </a>
+        </div>
+        
+        <div class="header-right">
+            <div class="user-menu">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span class="user-name" id="userName">Usuario</span>
+                <div class="dropdown-icon">▼</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="form-container">
+            <!-- Header Section -->
+            <div class="form-header">
+                <div class="form-icon">✏️</div>
+                <div class="form-title-section">
+                    <h1 class="form-title">Nueva tarea</h1>
+                    <p class="form-subtitle">Crea una nueva tarea y mantén tu día organizado</p>
+                </div>
+            </div>
+
+            <!-- Form -->
+            <form class="task-form" id="newTaskForm">
+                <!-- Información básica -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <span class="section-icon">📝</span>
+                        <h3 class="section-title">Información básica</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="title" class="form-label">
+                            Título <span class="required">*</span>
+                        </label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="text" 
+                                id="title" 
+                                name="title" 
+                                class="form-input" 
+                                placeholder="¿Qué necesitas hacer?"
+                                maxlength="50"
+                                required
+                            >
+                            <span class="char-counter">0/50</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="description" class="form-label">
+                            Descripción (opcional)
+                        </label>
+                        <div class="input-wrapper">
+                            <textarea 
+                                id="description" 
+                                name="description" 
+                                class="form-textarea" 
+                                placeholder="Agrega más detalles sobre esta tarea..."
+                                maxlength="300"
+                                rows="4"
+                            ></textarea>
+                            <span class="char-counter">0/300</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prioridad -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <span class="section-icon">⚡</span>
+                        <h3 class="section-title">Configuración</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <div class="checkbox-wrapper">
+                            <label class="checkbox-item">
+                                <input type="checkbox" id="isImportant" name="isImportant">
+                                <span class="checkbox-icon">⭐</span>
+                                <span class="checkbox-label">Marcar como importante</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Botones de acción -->
+                <div class="form-actions">
+                    <button type="button" class="btn-secondary" onclick="cancelTask()">
+                        ✕ Cancelar
+                    </button>
+                    <button type="submit" class="btn-primary" id="submitBtn">
+                        💾 Guardar tarea
+                    </button>
+                </div>
+            </form>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/js/auth.js"></script>
+    <script src="/js/tasks.js"></script>
+    <script>
+        // Verificar autenticación al cargar
+        document.addEventListener('DOMContentLoaded', function() {
+            if (!isAuthenticated()) {
+                window.location.href = '/login';
+                return;
+            }
+
+            // Cargar información del usuario
+            loadUserInfo();
+        });
+
+        // Cargar información del usuario desde el token
+        function loadUserInfo() {
+            const token = getToken();
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const userName = payload.email.split('@')[0];
+                    
+                    document.getElementById('userName').textContent = userName;
+                    document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+                } catch (e) {
+                    console.error('Error decodificando token:', e);
+                }
+            }
+        }
+
+        // Contador de caracteres para título
+        document.getElementById('title').addEventListener('input', function() {
+            const counter = this.parentElement.querySelector('.char-counter');
+            counter.textContent = `${this.value.length}/50`;
+        });
+
+        // Contador de caracteres para descripción
+        document.getElementById('description').addEventListener('input', function() {
+            const counter = this.parentElement.querySelector('.char-counter');
+            counter.textContent = `${this.value.length}/300`;
+        });
+
+        // Función para cancelar
+        function cancelTask() {
+            if (confirm('¿Estás seguro de que quieres cancelar? Se perderán todos los cambios.')) {
+                window.location.href = '/dashboard';
+            }
+        }
+
+        // Manejar envío del formulario
+        // Manejar envío del formulario
+        document.getElementById('newTaskForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const submitBtn = document.getElementById('submitBtn');
+            const originalText = submitBtn.textContent;
+            
+            // Obtener datos del formulario
+            const taskData = {
+                taskName: document.getElementById('title').value.trim(),
+                taskDescription: document.getElementById('description').value.trim(),
+                isImportant: document.getElementById('isImportant').checked
+            };
+
+            // AGREGAR ESTOS LOGS
+            console.log('Token actual:', getToken());
+            console.log('Datos a enviar:', taskData);
+
+            // Validar
+            if (!taskData.taskName) {
+                alert('Por favor, ingresa un título para la tarea');
+                return;
+            }
+
+            // Mostrar estado de carga
+            submitBtn.disabled = true;
+            submitBtn.textContent = '⏳ Guardando...';
+
+            try {
+                // Crear la tarea
+                const result = await createTask(taskData);
+                
+                // AGREGAR ESTE LOG
+                console.log('Resultado de createTask:', result);
+
+                if (result.success) {
+                    alert(`✅ Tarea "${taskData.taskName}" creada exitosamente!`);
+                    window.location.href = '/dashboard';
+                } else {
+                    alert(`❌ Error: ${result.error}`);
+                    submitBtn.disabled = false;
+                    submitBtn.textContent = originalText;
+                }
+            } catch (error) {
+                console.error('Error completo:', error);
+                alert('❌ Error al crear la tarea');
+                submitBtn.disabled = false;
+                submitBtn.textContent = originalText;
+            }
+        });
+    </script>
+</body>
+</html>

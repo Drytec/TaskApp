@@ -55,6 +55,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const email = emailInput.value.trim();
         const password = passwordInput.value;
+        
 
         
         let hasErrors = false;
@@ -93,7 +94,7 @@ document.addEventListener('DOMContentLoaded', function() {
         if (result.success) {
             showToast('¡Inicio de sesión exitoso!', 'success');
             setTimeout(() => {
-                window.location.href = '/dashboard'; 
+                window.location.href = '/welcome-dashboard'; 
             }, 1000);
         } else {
             showToast(result.error);

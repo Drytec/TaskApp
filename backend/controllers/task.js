@@ -1,42 +1,47 @@
-import TaskModel from "../models/task.js";
+const GlobalController = require("./globalController.js");
+const taskDAO = require("../DAO/taskDAO.js");
 
-class TaskController {
-    constructor(task) {
+class TaskController extends GlobalController {
+    constructor() {
+        super(taskDAO)
+    }
+createTask = async (req, res) => {
+    console.log("📝 Intentando crear tarea");
+    console.log("👤 Usuario:", req.user);
+    console.log("📦 Datos recibidos:", req.body);
+    
+    try {
+        const userId = req.user.id || req.user._id; // Algunos tokens usan _id
+        const taskData = { 
+            ...req.body, 
+            user: userId,
+            taskDescription: req.body.taskDescription || "" // Asegurar que no sea undefined
+        };
+        
+        console.log("💾 Datos finales para guardar:", taskData);
 
+        const task = await taskDAO.create(taskData);
+        console.log("✅ Tarea creada:", task);
+        
+        res.status(201).json(task);
+    } catch (err) {
+        console.error("❌ Error detallado:", err);
+        res.status(500).json({ error: err.message });
     }
-    async createTask(req, res) {
+};
+    getAllTasks = async (req, res) => {
         try {
-            const data = await TaskModel.createTask(req.body);
-            res.status(201).json({data});
-        }catch(err) { res.status(500).json({status: "error"}); }
-    }
-    async updateTask(req, res) {
-        try {
-            const {id} = req.params;
-            const data = await TaskModel.updateTask(id,req.body);
-            res.status(200).json({data});
-        }catch(err) { res.status(500).json({status: "error"}); }
-    }
-    async deleteTask(req, res) {
-        try {
-            const {id} = req.params;
-            const data = await TaskModel.deleteTask(id);
-            res.status(204).json({status: "ok"});
-        }catch(err) { res.status(500).json({status: "error"}); }
-    }
-    async getAllTask(req, res) {
-        try {
-            const data = await TaskModel.getAllTasks();
-            res.status(200).json(data);
-        }catch(err) { res.status(500).json({status: "error"}); }
-    }
-    async getOneTask(req, res) {
-        try {
-            const {id} = req.params;
-            const data = await TaskModel.getOneTask(id);
-            res.status(200).json(data);
-        }catch(err) { res.status(500).json({status: "error"}); }
-    }
+            const userId = req.user.id;
+            const tasks = await taskDAO.getAll({ user: userId });
+            res.json(tasks);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    };
+
 
 }
-export default new TaskController();
+module.exports = new TaskController();
+
+
+

@@ -1,34 +1,28 @@
 //Here the DBA will create the connection to db
-import dotenv from "dotenv";
-dotenv.config();
-import { MongoClient } from "mongodb";
+const mongoose = require("mongoose");
+require("dotenv").config();
 
-class dbClient {
-    constructor() {
-        // replace with de conexion to mongodb
-        const queryString = "mongodb://localhost:27017";
-        this.client = new MongoClient(queryString);
-        this.db = null;
+const connectDB = async () => {
+    try {
+        await mongoose.connect(process.env.MONGO_URI, {
+            useNewUrlParser: true,
+            useUnifiedTopology: true,
+        });
+        console.log("Connected to MongoDB");
+    } catch (error) {
+        console.error("Error connecting to MongoDB:", error.message);
+        process.exit(1);
     }
+};
 
-    async connectBD() {
-        try {
-            await this.client.connect();
-            this.db = this.client.db("miBaseDeDatos"); // replace the name with the db name
-            return this.db;
-        } catch (e) {
-            console.error(" Error conectando a MongoDB:", e);
-        }
+const disconnectDB = async () => {
+    try {
+        await mongoose.disconnect();
+        console.log("Disconnected from MongoDB");
+    } catch (error) {
+        console.error("Error disconnecting from MongoDB:", error.message);
     }
+};
 
-    async closeBD() {
-        try {
-            await this.client.close();
-            console.log(" Conexión cerrada");
-        } catch (e) {
-            console.error("Error cerrando la conexión:", e);
-        }
-    }
-}
 
-export default dbClient;
+module.exports = { connectDB, disconnectDB }

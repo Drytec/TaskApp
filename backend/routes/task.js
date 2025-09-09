@@ -1,11 +1,12 @@
-import express from "express";
-const route = express.Router();
-import TaskController from '../controllers/task.js';
+const express = require("express");
+const TaskController = require("../controllers/task");
+const auth = require("../middleware/auth");
+const router = express.Router();
 
-route.get("/", TaskController.getAllTask)
-route.get("/:id", TaskController.getOneTask)
-route.post("/", TaskController.createTask)
-route.put("/:id",TaskController.updateTask)
-route.delete("/:id",TaskController.deleteTask)
+router.get("/", auth,(req, res) => TaskController.getAllTasks(req, res));
+router.get("/:id",auth, (req, res) => TaskController.read(req, res));
+router.post("/",auth, (req, res) => TaskController.createTask(req, res));
+router.put("/:id", auth,(req, res) => TaskController.update(req, res));
+router.delete("/:id", auth,(req, res) => TaskController.delete(req, res));
 
-export default route;
+module.exports = router;
