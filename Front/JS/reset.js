@@ -21,7 +21,7 @@ form.addEventListener("submit", async (e) => {
   }
 
   try {
-    const res = await fetch("http://localhost:3000/api/reset-password", {
+    const res = await fetch("http://localhost:5100/api/reset-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ token, newPassword, confirmPassword }),

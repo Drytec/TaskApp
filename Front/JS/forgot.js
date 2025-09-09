@@ -1,42 +1,54 @@
-const form = document.getElementById("forgotForm");
+const forgotForm = document.getElementById("forgotForm");
+const emailInput = document.getElementById("email");
+const sendBtn = document.getElementById("sendBtn");
 const spinner = document.getElementById("spinner");
 const toast = document.getElementById("toast");
 
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-  const email = document.getElementById("email").value.trim();
+forgotForm.addEventListener("submit", async (e) => {
+  e.preventDefault(); // Prevent default form submission
+
+  const email = emailInput.value.trim();
 
   if (!email) {
-    return showToast("Por favor ingresa tu correo electrónico ❌");
+    return showToast("Por favor, ingresa tu correo electrónico ❌");
   }
 
+  // Disable button and show spinner
+  sendBtn.disabled = true;
   spinner.classList.remove("hidden");
+  toast.classList.remove("visible"); // Hide any previous toast
 
   try {
-    const res = await fetch("http://localhost:3000/api/forgot-password", {
+    const response = await fetch("/api/recover-password", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ email }),
+      body: JSON.stringify({ email })
     });
 
-    // Simulamos spinner máximo 2 segundos
-    setTimeout(async () => {
-      spinner.classList.add("hidden");
+    // Simulate network delay for a better user experience (optional)
+    await new Promise(resolve => setTimeout(resolve, 1500)); 
 
-      if (res.ok) {
-        showToast("Revisa tu correo para continuar ✅");
-      } else {
-        showToast("Inténtalo de nuevo más tarde ❌");
-      }
-    }, 2000);
+    if (response.ok || response.status === 202) { // Backend returns 202 even if email not found
+      showToast("Si existe una cuenta con ese correo, se ha enviado un enlace de recuperación. ✅");
+    } else {
+      // For any other unexpected error from the server
+      const errorData = await response.json();
+      showToast(`Error: ${errorData.error || "Inténtalo de nuevo más tarde"} ❌`);
+    }
   } catch (err) {
+    console.error("Error during password recovery request:", err);
+    showToast("Error de conexión. Por favor, verifica tu internet o inténtalo más tarde ❌");
+  } finally {
+    // Re-enable button and hide spinner
+    sendBtn.disabled = false;
     spinner.classList.add("hidden");
-    showToast("Error de conexión ❌");
   }
 });
 
-function showToast(msg) {
-  toast.textContent = msg;
+function showToast(message) {
+  toast.textContent = message;
   toast.classList.add("visible");
-  setTimeout(() => toast.classList.remove("visible"), 4000);
+  setTimeout(() => {
+    toast.classList.remove("visible");
+  }, 5000); // Toast visible for 5 seconds
 }
