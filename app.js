@@ -1,39 +1,42 @@
 const express = require("express");
 const dotenv = require("dotenv");
+const cors = require("cors");
+const { connectDB } = require("./backend/config/dbClient.js");
+const routes = require("./backend/routes/routes.js");
+const cors = require("cors");
+const express = require("express");
+
 dotenv.config();
 
-const { connectDB } = require("./backend/config/dbClient.js");
-const cors = require("cors");
-const routes = require("./backend/routes/routes.js");
 
 const app = express();
 
+app.use(cors({
+    origin: "https://task-app-front-mu.vercel.app", // 👈 cámbialo luego de pruebas
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
-
 
 app.use("/api", routes);
 
 
 
-app.use(cors({
-    origin: "https://task-app-front-mu.vercel.app/",
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    allowedHeaders: ["Content-Type", "Authorization"]
-}));
 
 try {
+    connectDB();
+
     const port = process.env.PORT || 3000;
     app.listen(port, () => {
-        console.log("Server running at http://localhost:" + port);
+        console.log("✅ Server running at http://localhost:" + port);
     });
-
-    connectDB();
 } catch (err) {
-    console.error(err);
+    console.error("❌ Error starting server:", err);
 }
 
 
 app.get("/", (req, res) => {
-    res.send("index");
+    res.send("Backend API is running 🚀");
 });
