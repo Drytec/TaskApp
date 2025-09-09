@@ -1,10 +1,5 @@
-﻿// tasks.js
+﻿const API_URL = NEX_PUBLIC_API_URL.env; 
 
-// Usar API_URL y funciones de auth.js si ya existen
-// (Evita doble declaración)
-// ...existing code...
-
-// Function to create a task
 async function createTask(taskData) {
     try {
         const token = getToken();
