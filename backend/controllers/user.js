@@ -3,7 +3,7 @@ const GlobalController = require("./globalController.js");
 const UserDAO = require("../DAO/userDAO.js");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const User = require("../models/User");
+const User = require("../models/user");
 
 
 
