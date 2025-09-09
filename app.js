@@ -9,7 +9,7 @@ import path from "path";
 import { fileURLToPath } from "url";
 import authRoutes from './backend/routes/auth.js';
 
-const __filename = fileURLToPath(import.meta.url);
+const __filename = fileURLToPath(node:url);
 const __dirname = path.dirname(__filename);
 
 console.log("__dirname:", __dirname);
