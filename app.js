@@ -3,7 +3,7 @@ const dotenv = require("dotenv");
 dotenv.config();
 
 const { connectDB } = require("./backend/config/dbClient.js");
-
+const cors = require("cors");
 const routes = require("./backend/routes/routes.js");
 
 const app = express();
@@ -13,6 +13,14 @@ app.use(express.urlencoded({ extended: true }));
 
 
 app.use("/api", routes);
+
+
+
+app.use(cors({
+    origin: "*", //this is temporal
+    methods: ["GET", "POST", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"]
+}));
 
 try {
     const port = process.env.PORT || 3000;

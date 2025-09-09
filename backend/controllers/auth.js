@@ -1,6 +1,6 @@
 // backend/controllers/authController.js
 const crypto = require("crypto");
-const User = require("../models/User");
+const User = require("../models/user");
 const sendEmail = require("../utils/mailer");
 const bcrypt = require("bcrypt");
 
