@@ -1,36 +1,17 @@
-import { ObjectId } from "mongodb";
-import dbClient from "../config/dbClient.js";
 
-class TaskModel {
-    constructor() {}
+const mongoose = require("mongoose");
 
-    async createTask(task) {
-        const collTask = dbClient.db.collection("tasks");
-        return await collTask.insertOne(task);
+const TaskSchema = new mongoose.Schema(
+    {
+
+        taskName: { type: String, required: true },
+        taskDescription: { type: String, required: true },
+        isComplete: { type: Boolean, default: false },
+        isImportant: { type: Boolean, default: false },
+        dateCreated: { type: Date, default: Date.now },
+        dateCompleted: { type: Date, default: Date.now },
     }
+)
 
-    async getAllTasks() {
-        const collTask = dbClient.db.collection("tasks");
-        return await collTask.find({}).toArray();
-    }
+module.exports = mongoose.model.Task||mongoose.model("Task", TaskSchema);
 
-    async getOneTask(id) {
-        const collTask = dbClient.db.collection("tasks");
-        return await collTask.findOne({ _id: new ObjectId(id) });
-    }
-
-    async updateTask(id, task) {
-        const collTask = dbClient.db.collection("tasks");
-        return await collTask.updateOne(
-            { _id: new ObjectId(id) },
-            { $set: task }
-        );
-    }
-
-    async deleteTask(id) {
-        const collTask = dbClient.db.collection("tasks");
-        return await collTask.deleteOne({ _id: new ObjectId(id) });
-    }
-}
-
-export default new TaskModel();
