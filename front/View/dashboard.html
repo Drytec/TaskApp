@@ -1,0 +1,305 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskApp - Mis Tareas</title>
+    <link rel="stylesheet" href="../CSS/dashboard.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/welcome-dashboard" class="logo-link">
+                <h1 class="logo">TicTask</h1>
+            </a>
+        </div>
+        
+        <div class="header-center">
+            <div class="search-container">
+                <div class="search-icon">🔍</div>
+                <input type="text" class="search-input" placeholder="Buscar tareas..." id="searchInput">
+            </div>
+        </div>
+        
+        <div class="header-right">
+            <button class="new-task-btn" onclick="goToNewTask()">Nueva tarea</button>
+            <div class="user-menu">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span class="user-name" id="userName">Usuario</span>
+                <div class="dropdown-icon">▼</div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Title -->
+        <div class="page-header">
+            <div class="page-title">
+                <span class="title-icon">📋</span>
+                <h1>Mis Tareas</h1>
+            </div>
+            <div class="view-controls">
+                <button class="view-btn active">📊 Kanban</button>
+                <button class="view-btn">📝 Lista</button>
+            </div>
+        </div>
+
+        <!-- Loading indicator -->
+        <div id="loadingIndicator" style="text-align: center; padding: 40px; display: none;">
+            <h3>Cargando tareas...</h3>
+        </div>
+
+        <!-- Kanban Board -->
+        <div class="kanban-board" id="kanbanBoard">
+            <!-- Por hacer Column -->
+            <div class="kanban-column">
+                <div class="column-header por-hacer">
+                    <div class="column-title">
+                        <span class="column-icon">📝</span>
+                        <span>Por hacer</span>
+                    </div>
+                    <span class="task-count" id="todoCount">0</span>
+                </div>
+                
+                <div class="column-content" id="todoColumn">
+                    <!-- Las tareas se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- En progreso Column -->
+            <div class="kanban-column">
+                <div class="column-header en-progreso">
+                    <div class="column-title">
+                        <span class="column-icon">⚡</span>
+                        <span>En progreso</span>
+                    </div>
+                    <span class="task-count" id="inProgressCount">0</span>
+                </div>
+                
+                <div class="column-content" id="inProgressColumn">
+                    <!-- Las tareas se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+
+            <!-- Completado Column -->
+            <div class="kanban-column">
+                <div class="column-header completado">
+                    <div class="column-title">
+                        <span class="column-icon">✅</span>
+                        <span>Completado</span>
+                    </div>
+                    <span class="task-count" id="completedCount">0</span>
+                </div>
+                
+                <div class="column-content" id="completedColumn">
+                    <!-- Las tareas se cargarán aquí dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="/js/auth.js"></script>
+    <script src="/js/tasks.js"></script>
+    <script>
+        let allTasks = []; // Almacenar todas las tareas para búsqueda
+
+        // Verificar autenticación al cargar
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (!isAuthenticated()) {
+                window.location.href = '/login';
+                return;
+            }
+
+            // Cargar información del usuario
+            loadUserInfo();
+            
+            // Cargar tareas
+            await loadAllTasks();
+        });
+
+        // Cargar información del usuario desde el token
+        function loadUserInfo() {
+            const token = getToken();
+            if (token) {
+                try {
+                    const payload = JSON.parse(atob(token.split('.')[1]));
+                    const userName = payload.email.split('@')[0];
+                    
+                    document.getElementById('userName').textContent = userName;
+                    document.getElementById('userAvatar').textContent = userName.charAt(0).toUpperCase();
+                } catch (e) {
+                    console.error('Error decodificando token:', e);
+                }
+            }
+        }
+
+        // Cargar todas las tareas
+        async function loadAllTasks() {
+            // Mostrar indicador de carga
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('kanbanBoard').style.display = 'none';
+
+            const result = await getAllTasks();
+            
+            if (result.success) {
+                allTasks = result.data;
+                displayTasks(allTasks);
+            } else {
+                console.error('Error cargando tareas:', result.error);
+                alert('Error al cargar las tareas');
+            }
+
+            // Ocultar indicador de carga
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('kanbanBoard').style.display = 'flex';
+        }
+
+        // Mostrar tareas en el tablero Kanban
+        function displayTasks(tasks) {
+            // Limpiar columnas
+            document.getElementById('todoColumn').innerHTML = '';
+            document.getElementById('inProgressColumn').innerHTML = '';
+            document.getElementById('completedColumn').innerHTML = '';
+
+            // Contadores
+            let todoCount = 0;
+            let inProgressCount = 0;
+            let completedCount = 0;
+
+            // Distribuir tareas en columnas
+            tasks.forEach(task => {
+                const taskCard = createTaskCard(task);
+                
+                if (task.isComplete) {
+                    document.getElementById('completedColumn').appendChild(taskCard);
+                    completedCount++;
+                } else if (task.isImportant) {
+                    // Usamos isImportant como indicador temporal de "en progreso"
+                    document.getElementById('inProgressColumn').appendChild(taskCard);
+                    inProgressCount++;
+                } else {
+                    document.getElementById('todoColumn').appendChild(taskCard);
+                    todoCount++;
+                }
+            });
+
+            // Actualizar contadores
+            document.getElementById('todoCount').textContent = todoCount;
+            document.getElementById('inProgressCount').textContent = inProgressCount;
+            document.getElementById('completedCount').textContent = completedCount;
+        }
+
+        // Crear elemento de tarjeta de tarea
+        function createTaskCard(task) {
+            const card = document.createElement('div');
+            card.className = 'task-card' + (task.isComplete ? ' completed' : '');
+            card.dataset.taskId = task._id;
+
+            // Determinar prioridad (basado en isImportant por ahora)
+            const priority = task.isImportant ? 'alta' : 'media';
+
+            card.innerHTML = `
+                <h3 class="task-title">${task.taskName}</h3>
+                ${task.taskDescription ? `<p class="task-description">${task.taskDescription}</p>` : ''}
+                <div class="task-meta">
+                    <span class="task-time">📅 ${formatDate(task.dateCreated)}</span>
+                    <span class="task-priority ${priority}">${priority.charAt(0).toUpperCase() + priority.slice(1)}</span>
+                </div>
+                <div class="task-actions">
+                    <button class="action-btn complete" onclick="toggleTaskComplete('${task._id}', ${!task.isComplete})" title="${task.isComplete ? 'Marcar como pendiente' : 'Marcar como completada'}">
+                        ${task.isComplete ? '↩️' : '✅'}
+                    </button>
+                    <button class="action-btn important" onclick="toggleTaskImportant('${task._id}', ${!task.isImportant})" title="${task.isImportant ? 'Quitar importancia' : 'Marcar como importante'}">
+                        ${task.isImportant ? '⭐' : '☆'}
+                    </button>
+                    <button class="action-btn edit" onclick="editTask('${task._id}')" title="Editar tarea">✏️</button>
+                    <button class="action-btn delete" onclick="deleteTaskById('${task._id}')" title="Eliminar tarea">🗑️</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        // Formatear fecha
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            const today = new Date();
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            if (date.toDateString() === today.toDateString()) {
+                return `Hoy ${date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
+            } else if (date.toDateString() === yesterday.toDateString()) {
+                return `Ayer ${date.toLocaleTimeString('es-ES', { hour: '2-digit', minute: '2-digit' })}`;
+            } else {
+                return date.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit', year: 'numeric' });
+            }
+        }
+
+        // Marcar tarea como completada/pendiente
+        async function toggleTaskComplete(taskId, isComplete) {
+            const result = await updateTask(taskId, { isComplete });
+            
+            if (result.success) {
+                await loadAllTasks(); // Recargar tareas
+            } else {
+                alert('Error al actualizar la tarea: ' + result.error);
+            }
+        }
+
+        // Marcar tarea como importante/normal
+        async function toggleTaskImportant(taskId, isImportant) {
+            const result = await updateTask(taskId, { isImportant });
+            
+            if (result.success) {
+                await loadAllTasks(); // Recargar tareas
+            } else {
+                alert('Error al actualizar la tarea: ' + result.error);
+            }
+        }
+
+        // Eliminar tarea
+        async function deleteTaskById(taskId) {
+            if (confirm('¿Estás seguro de que quieres eliminar esta tarea?')) {
+                const result = await deleteTask(taskId);
+                
+                if (result.success) {
+                    await loadAllTasks(); // Recargar tareas
+                } else {
+                    alert('Error al eliminar la tarea: ' + result.error);
+                }
+            }
+        }
+
+        // Editar tarea
+        function editTask(taskId) {
+            // Por ahora, redirigir a la página de nueva tarea
+            // En el futuro, podrías pasar el ID como parámetro
+            alert('Función de edición en desarrollo');
+        }
+
+        // Ir a nueva tarea
+        function goToNewTask() {
+            window.location.href = '/new-task';
+        }
+
+        // Búsqueda de tareas
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            
+            if (searchTerm === '') {
+                displayTasks(allTasks);
+            } else {
+                const filteredTasks = allTasks.filter(task => 
+                    task.taskName.toLowerCase().includes(searchTerm) ||
+                    (task.taskDescription && task.taskDescription.toLowerCase().includes(searchTerm))
+                );
+                displayTasks(filteredTasks);
+            }
+        });
+    </script>
+</body>
+</html>
