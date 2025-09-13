@@ -25,8 +25,18 @@ class TaskController extends GlobalController {
             res.status(500).json({ error: err.message });
         }
     };
+    editTask = async (req, res) => {
+        try {
+            const userId = req.user.id;
+            const taskId = req.params.id;
+            const updates = req.body;
 
-
+            const updatedTask = await taskDAO.update(taskId, updates);
+            res.json(updatedTask);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    };
 }
 module.exports = new TaskController();
 
