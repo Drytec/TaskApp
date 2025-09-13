@@ -135,11 +135,32 @@ body {
     background: none;
     cursor: pointer;
     text-align: left;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 }
+
+a {
+    text-decoration: none;
+}
+
 
 .dropdown-item:hover {
     background-color: #f1f5f9;
+}
+
+.dropdown-item.logout:hover {
     color: #dc2626;
+}
+
+.dropdown-icon-item {
+    font-size: 16px;
+}
+
+.dropdown-divider {
+    height: 1px;
+    background-color: #e2e8f0;
+    margin: 8px 0;
 }
 
 /* Main Content */

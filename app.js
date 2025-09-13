@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import express from "express";
 import mongoose from "mongoose"; // Añadir
-import cors from "cors"; // Añadir
+//import cors from "cors"; // Añadir
 import taskRoutes from './backend/routes/task.js';
 import userRoutes from './backend/routes/user.js';
 import path from "path";
@@ -17,7 +17,7 @@ console.log("__dirname:", __dirname);
 const app = express();
 
 // Añadir CORS antes de otras middlewares
-app.use(cors());
+//app.use(cors());
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
@@ -50,10 +50,17 @@ app.use((req, res, next) => {
 // Servir archivos estáticos de la carpeta "Front"
 app.use(express.static(path.join(__dirname, "Front")));
 
-// Ruta raíz - redirige a login
+// Ruta raíz - redirige a home
 app.get("/", (req, res) => {
-    console.log("Redirecting to /login");
-    res.redirect("/login");
+    console.log("Redirecting to /home");
+    res.redirect("/home");
+});
+
+// Ruta para home
+app.get("/home", (req, res) => {
+    const filePath = path.join(__dirname, "Front", "View", "home.html");
+    console.log("Serving home from:", filePath);
+    res.sendFile(filePath);
 });
 
 // Ruta para login
@@ -94,6 +101,13 @@ app.get("/dashboard", (req, res) => {
 app.get("/new-task", (req, res) => {
     const filePath = path.join(__dirname, "Front", "View", "new-task.html");
     console.log("Serving new-task from:", filePath);
+    res.sendFile(filePath);
+});
+
+// Ruta para perfil
+app.get("/profile", (req, res) => {
+    const filePath = path.join(__dirname, "Front", "View", "profile.html");
+    console.log("Serving profile from:", filePath);
     res.sendFile(filePath);
 });
 

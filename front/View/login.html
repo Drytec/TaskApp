@@ -12,6 +12,7 @@
             <div class="header">
                 <h1 class="logo">TicTask</h1>
                 <p class="subtitle">Organiza tu día, cumple tus metas</p>
+                <a href="/home" class="back-to-home">← Volver al inicio</a>
             </div>
             
             <div class="form-container">
@@ -177,10 +178,7 @@
                         setTimeout(() => {
                             window.location.href = '/welcome-dashboard';
                         }, 1000);
-                    } else {
-                        showToast('Credenciales incorrectas. Intenta con admin@test.com / 123456', true);
-                        toggleSpinner(false);
-                    }
+                    } 
                 } catch (error) {
                     console.error('Error en login:', error);
                     showToast('Error al iniciar sesión. Intenta nuevamente.', true);

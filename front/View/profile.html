@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskApp - Mi Perfil</title>
+    <link rel="stylesheet" href="../CSS/profile.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <a href="/welcome-dashboard" class="logo-link">
+                <h1 class="logo"></h1>
+            </a>
+        </div>
+        
+        <div class="header-center">
+            <h2 class="page-title">Mi Perfil</h2>
+        </div>
+        
+        <div class="header-right">
+            <button class="back-btn" onclick="goToDashboard()">Volver al Dashboard</button>
+            <div class="user-menu" onclick="toggleDropdown()">
+                <div class="user-avatar" id="userAvatar">U</div>
+                <span class="user-name" id="userName">Usuario</span>
+                <div class="dropdown-icon">▼</div>
+                
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu" id="userDropdown">
+                    <div class="dropdown-item" onclick="goToProfile()">
+                        <span class="dropdown-icon-item">👤</span>
+                        <span>Mi perfil</span>
+                    </div>
+                    <div class="dropdown-item" onclick="goToSettings()">
+                        <span class="dropdown-icon-item">⚙️</span>
+                        <span>Configuración</span>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item logout" onclick="handleLogout()">
+                        <span class="dropdown-icon-item">🚪</span>
+                        <span>Cerrar sesión</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="profile-container">
+            <div class="profile-header">
+                <div class="profile-avatar" id="profileAvatar">U</div>
+                <h2 class="profile-title">Información Personal</h2>
+            </div>
+            
+            <div class="profile-info">
+                <div class="info-group">
+                    <label class="info-label">Nombres:</label>
+                    <div class="info-value" id="userFirstName">Cargando...</div>
+                </div>
+                
+                <div class="info-group">
+                    <label class="info-label">Apellidos:</label>
+                    <div class="info-value" id="userLastName">Cargando...</div>
+                </div>
+                
+                <div class="info-group">
+                    <label class="info-label">Edad:</label>
+                    <div class="info-value" id="userAge">Cargando...</div>
+                </div>
+                
+                <div class="info-group">
+                    <label class="info-label">Correo:</label>
+                    <div class="info-value" id="userEmail">Cargando...</div>
+                </div>
+                
+                <div class="info-group">
+                    <label class="info-label">Fecha de registro:</label>
+                    <div class="info-value" id="userCreatedAt">Cargando...</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Scripts -->
+    <script src="../js/auth.js"></script>
+    <script>
+        // Verificar autenticación
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Verificar si el usuario está autenticado
+            const isAuthenticated = await checkAuth();
+            
+            if (!isAuthenticated) {
+                window.location.href = '/';
+                return;
+            }
+            
+            // Cargar información del usuario
+            await loadUserInfo();
+        });
+        
+        // Cargar información del usuario
+        async function loadUserInfo() {
+            try {
+                // Obtener token del localStorage
+                const token = localStorage.getItem('authToken');
+                
+                if (!token) {
+                    throw new Error('No se encontró el token');
+                }
+                
+                // Hacer petición al servidor para obtener datos del usuario
+                const response = await fetch('http://localhost:5100/api/users/me', {
+                    method: 'GET',
+                    headers: {
+                        'Authorization': `Bearer ${token}`,
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Error al obtener información del usuario');
+                }
+                
+                const userData = await response.json();
+                console.log('Datos del usuario:', userData);
+                
+                // Mostrar datos en la interfaz
+                document.getElementById('userName').textContent = userData.name || 'Usuario';
+                document.getElementById('userFirstName').textContent = userData.name || 'No disponible';
+                document.getElementById('userLastName').textContent = userData.lastname || 'No disponible';
+                document.getElementById('userAge').textContent = userData.age || 'No disponible';
+                document.getElementById('userEmail').textContent = userData.email || 'No disponible';
+                
+                // Formatear y mostrar la fecha de creación
+                if (userData.createdAt) {
+                    const createdDate = new Date(userData.createdAt);
+                    const formattedDate = createdDate.toLocaleDateString('es-ES', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric'
+                    });
+                    document.getElementById('userCreatedAt').textContent = formattedDate;
+                } else {
+                    document.getElementById('userCreatedAt').textContent = 'No disponible';
+                }
+                
+                // Actualizar avatar con iniciales
+                if (userData.name) {
+                    const initials = userData.name.charAt(0).toUpperCase();
+                    document.getElementById('userAvatar').textContent = initials;
+                    document.getElementById('profileAvatar').textContent = initials;
+                }
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Error al cargar la información del usuario: ' + error.message);
+            }
+        }
+        
+        // Función para volver al dashboard
+        function goToDashboard() {
+            window.location.href = '/dashboard';
+        }
+        
+        // Toggle del dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Cerrar dropdown si se hace clic fuera
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-menu') && !event.target.closest('.user-menu')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+
+        // Función de cerrar sesión
+        function handleLogout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                logout(); // Función de auth.js
+            }
+        }
+
+        // Función para ir al perfil
+        function goToProfile() {
+            window.location.href = '/profile';
+        }
+
+        // Función para ir a configuración
+        function goToSettings() {
+            alert('Función de configuración - próximamente');
+        }
+    </script>
+</body>
+</html>

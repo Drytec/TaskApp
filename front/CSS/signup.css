@@ -125,8 +125,8 @@ body {
 }
 
 .input-field:invalid:not(:focus):not(:placeholder-shown):not([type="password"]) {
-    border-color: #ef4444;
-    background: #fef2f2;
+    
+    background: #ffffff;
 }
 
 /* Password requirements */
@@ -151,12 +151,12 @@ body {
     margin-bottom: 0;
 }
 
-.requirement.valid {
+.requirement.met {
     color: #10b981;
 }
 
-.requirement.invalid {
-    color: #ef4444;
+.requirement:not(.met) {
+    color: #64748b;
 }
 
 .check-icon {
@@ -173,14 +173,14 @@ body {
     transition: all 0.2s ease;
 }
 
-.requirement.valid .check-icon {
+.requirement.met .check-icon {
     background: #10b981;
     color: white;
 }
 
-.requirement.invalid .check-icon {
-    background: #ef4444;
-    color: white;
+.requirement:not(.met) .check-icon {
+    background: #e2e8f0;
+    color: transparent;
 }
 
 /* Error messages */
@@ -290,11 +290,13 @@ body {
     opacity: 0;
     transition: all 0.3s ease;
     z-index: 1000;
+    display: none;
 }
 
 .toast.show {
     transform: translateX(0);
     opacity: 1;
+    display: block;
 }
 
 .toast.error {

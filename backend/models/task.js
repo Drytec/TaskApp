@@ -9,6 +9,9 @@ const TaskSchema = new mongoose.Schema(
             isImportant: {type: Boolean, default: false},
             dateCreated: {type: Date, default: Date.now},
             dateCompleted: {type: Date, default: Date.now},
+            dueDate: {type: Date},
+            dueTime: {type: String},
+            status: {type: String, enum: ['Por hacer', 'Haciendo', 'Hecho'], default: 'Por hacer'},
             user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
     }
 )

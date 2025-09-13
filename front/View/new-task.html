@@ -16,10 +16,27 @@
         </div>
         
         <div class="header-right">
-            <div class="user-menu">
+            <div class="user-menu" onclick="toggleDropdown()">
                 <div class="user-avatar" id="userAvatar">U</div>
                 <span class="user-name" id="userName">Usuario</span>
                 <div class="dropdown-icon">▼</div>
+                
+                <!-- Dropdown Menu -->
+                <div class="dropdown-menu" id="userDropdown">
+                    <div class="dropdown-item" onclick="goToProfile()">
+                        <span class="dropdown-icon-item">👤</span>
+                        <span>Mi perfil</span>
+                    </div>
+                    <div class="dropdown-item" onclick="goToSettings()">
+                        <span class="dropdown-icon-item">⚙️</span>
+                        <span>Configuración</span>
+                    </div>
+                    <div class="dropdown-divider"></div>
+                    <div class="dropdown-item logout" onclick="handleLogout()">
+                        <span class="dropdown-icon-item">🚪</span>
+                        <span>Cerrar sesión</span>
+                    </div>
+                </div>
             </div>
         </div>
     </header>
@@ -81,11 +98,54 @@
                     </div>
                 </div>
 
-                <!-- Prioridad -->
+                <!-- Fecha y Hora -->
+                <div class="form-section">
+                    <div class="section-header">
+                        <span class="section-icon">📅</span>
+                        <h3 class="section-title">Fecha y Hora</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dueDate" class="form-label">Fecha</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="date" 
+                                id="dueDate" 
+                                name="dueDate" 
+                                class="form-input"
+                            >
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="dueTime" class="form-label">Hora</label>
+                        <div class="input-wrapper">
+                            <input 
+                                type="time" 
+                                id="dueTime" 
+                                name="dueTime" 
+                                class="form-input"
+                            >
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Estado y Prioridad -->
                 <div class="form-section">
                     <div class="section-header">
                         <span class="section-icon">⚡</span>
                         <h3 class="section-title">Configuración</h3>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="status" class="form-label">Estado</label>
+                        <div class="input-wrapper">
+                            <select id="status" name="status" class="form-input">
+                                <option value="Por hacer">Por hacer</option>
+                                <option value="Haciendo">Haciendo</option>
+                                <option value="Hecho">Hecho</option>
+                            </select>
+                        </div>
                     </div>
 
                     <div class="form-group">
@@ -161,8 +221,40 @@
                 window.location.href = '/dashboard';
             }
         }
+        
+        // Toggle del dropdown menu
+        function toggleDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
 
-        // Manejar envío del formulario
+        // Cerrar dropdown si se hace clic fuera
+        window.onclick = function(event) {
+            if (!event.target.matches('.user-menu') && !event.target.closest('.user-menu')) {
+                const dropdown = document.getElementById('userDropdown');
+                if (dropdown.classList.contains('show')) {
+                    dropdown.classList.remove('show');
+                }
+            }
+        }
+
+        // Función de cerrar sesión
+        function handleLogout() {
+            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+                logout(); // Función de auth.js
+            }
+        }
+
+        // Función para ir al perfil
+        function goToProfile() {
+            window.location.href = '/profile';
+        }
+
+        // Función para ir a configuración
+        function goToSettings() {
+            alert('Función de configuración - próximamente');
+        }
+
         // Manejar envío del formulario
         document.getElementById('newTaskForm').addEventListener('submit', async function(e) {
             e.preventDefault();
@@ -174,7 +266,10 @@
             const taskData = {
                 taskName: document.getElementById('title').value.trim(),
                 taskDescription: document.getElementById('description').value.trim(),
-                isImportant: document.getElementById('isImportant').checked
+                isImportant: document.getElementById('isImportant').checked,
+                dueDate: document.getElementById('dueDate').value || null,
+                dueTime: document.getElementById('dueTime').value || null,
+                status: document.getElementById('status').value
             };
 
             // AGREGAR ESTOS LOGS

@@ -20,6 +20,28 @@ function isAuthenticated() {
     return !!getToken();
 }
 
+async function checkAuth() {
+    const token = getToken();
+    if (!token) {
+        return false;
+    }
+    
+    try {
+        const response = await fetch(`${API_URL}/users/me`, {
+            method: 'GET',
+            headers: {
+                'Authorization': `Bearer ${token}`,
+                'Content-Type': 'application/json'
+            }
+        });
+        
+        return response.ok;
+    } catch (error) {
+        console.error('Error verificando autenticación:', error);
+        return false;
+    }
+}
+
 
 async function login(email, password) {
     try {
