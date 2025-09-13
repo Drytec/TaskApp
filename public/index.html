@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskApp - Iniciar Sesión</title>
+    <link rel="stylesheet" href="CSS/login.css">
+</head>
+<body>
+    <div class="container">
+        <div class="form-wrapper">
+            <div class="header">
+                <h1 class="logo">TicTask</h1>
+                <p class="subtitle">Organiza tu día, cumple tus metas</p>
+            </div>
+            
+            <div class="form-container">
+                <h2 class="form-title">Iniciar sesión</h2>
+                <p class="form-subtitle">Bienvenido de vuelta</p>
+                
+                <form class="login-form">
+                    <div class="input-group">
+                        <label for="email" class="input-label">
+                            Correo electrónico <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email" 
+                            class="input-field" 
+                            placeholder="tu@email.com"
+                            required
+                        >
+                        <div class="error-message" id="email-error"></div>
+                    </div>
+                    
+                    <div class="input-group">
+                        <label for="password" class="input-label">
+                            Contraseña <span class="required">*</span>
+                        </label>
+                        <input 
+                            type="password" 
+                            id="password" 
+                            name="password" 
+                            class="input-field" 
+                            placeholder="••••••••"
+                            required
+                        >
+                        <div class="error-message" id="password-error"></div>
+                    </div>
+                    
+                    <button type="submit" class="submit-btn" id="login-btn">
+                        <span class="btn-text">Iniciar sesión</span>
+                        <div class="spinner hidden" id="login-spinner"></div>
+                    </button>
+                    
+                    <div class="form-links">
+                        <a href="/password-recovery" class="forgot-password">¿Olvidaste tu contraseña?</a>
+                    </div>
+                </form>
+                
+                <div class="signup-link">
+                    <span>¿No tienes cuenta? </span>
+                    <a href="/signup" class="link">Regístrate</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+
+    <div class="toast" id="toast">
+        <div class="toast-content">
+            <span class="toast-message"></span>
+        </div>
+    </div>
+
+    <script>
+        // Este script es solo para autenticar con un solo usuario, fue para hacer la prueba y poder ver 
+        // el dashboard, una vez estén las funciones de autenticación, se puede eliminar.
+        document.addEventListener('DOMContentLoaded', function() {
+            const loginForm = document.querySelector('.login-form');
+            const loginBtn = document.getElementById('login-btn');
+            const loginSpinner = document.getElementById('login-spinner');
+            const btnText = document.querySelector('.btn-text');
+            const toast = document.getElementById('toast');
+            const toastMessage = document.querySelector('.toast-message');
+
+            // Función para mostrar toast
+            function showToast(message, isError = false) {
+                toastMessage.textContent = message;
+                toast.className = `toast ${isError ? 'error' : ''}`;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, 3000);
+            }
+
+            // Función para mostrar/ocultar spinner
+            function toggleSpinner(show) {
+                if (show) {
+                    loginSpinner.classList.remove('hidden');
+                    btnText.classList.add('loading');
+                    loginBtn.disabled = true;
+                } else {
+                    loginSpinner.classList.add('hidden');
+                    btnText.classList.remove('loading');
+                    loginBtn.disabled = false;
+                }
+            }
+
+            // Función para validar email
+            function validateEmail(email) {
+                const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                return emailRegex.test(email);
+            }
+
+            // Función para limpiar errores
+            function clearErrors() {
+                document.querySelectorAll('.error-message').forEach(error => {
+                    error.classList.remove('show');
+                    error.textContent = '';
+                });
+            }
+
+            // Función para mostrar error en campo específico
+            function showFieldError(fieldId, message) {
+                const errorElement = document.getElementById(fieldId + '-error');
+                errorElement.textContent = message;
+                errorElement.classList.add('show');
+            }
+
+            // Manejar envío del formulario
+            loginForm.addEventListener('submit', async function(e) {
+                e.preventDefault();
+                
+                clearErrors();
+                
+                const email = document.getElementById('email').value.trim();
+                const password = document.getElementById('password').value;
+
+                // Validaciones básicas
+                if (!email) {
+                    showFieldError('email', 'El correo electrónico es requerido');
+                    return;
+                }
+
+                if (!validateEmail(email)) {
+                    showFieldError('email', 'Ingresa un correo electrónico válido');
+                    return;
+                }
+
+                if (!password) {
+                    showFieldError('password', 'La contraseña es requerida');
+                    return;
+                }
+
+                if (password.length < 6) {
+                    showFieldError('password', 'La contraseña debe tener al menos 6 caracteres');
+                    return;
+                }
+
+                // Mostrar spinner
+                toggleSpinner(true);
+
+                try {
+                    // Simular llamada a API (por ahora solo simulación)
+                    // En un proyecto real, aquí harías la llamada al backend
+                    await new Promise(resolve => setTimeout(resolve, 1500));
+
+                    // Simular validación de credenciales
+                    // En un proyecto real, esto vendría del servidor
+                    if (email === 'admin@test.com' && password === '123456') {
+                        showToast('¡Inicio de sesión exitoso!');
+                        
+                        // Redirigir al dashboard después de un breve delay
+                        setTimeout(() => {
+                            window.location.href = '/welcome-dashboard';
+                        }, 1000);
+                    } else {
+                        showToast('Credenciales incorrectas. Intenta con admin@test.com / 123456', true);
+                        toggleSpinner(false);
+                    }
+                } catch (error) {
+                    console.error('Error en login:', error);
+                    showToast('Error al iniciar sesión. Intenta nuevamente.', true);
+                    toggleSpinner(false);
+                }
+            });
+
+            // Limpiar errores cuando el usuario empiece a escribir
+            document.getElementById('email').addEventListener('input', function() {
+                const errorElement = document.getElementById('email-error');
+                errorElement.classList.remove('show');
+            });
+
+            document.getElementById('password').addEventListener('input', function() {
+                const errorElement = document.getElementById('password-error');
+                errorElement.classList.remove('show');
+            });
+        });
+    </script>
+    <script src="js/auth.js"></script>
+    <script src="js/login-form.js"></script>
+</body>
+</html>
