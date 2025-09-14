@@ -6,8 +6,10 @@
   "type": "commonjs",
   "scripts": {
     "start": "node app.js",
+    "build": "echo \"no build\"",
     "dev": "nodemon app.js"
   },
+
   "author": "",
   "license": "ISC",
   "dependencies": {
@@ -16,7 +18,8 @@
     "express": "^5.1.0",
     "jsonwebtoken": "^9.0.2",
     "mongodb": "^6.19.0",
-    "mongoose": "^8.18.1"
+    "mongoose": "^8.18.0",
+    "nodemailer": "^7.0.6"
   },
   "devDependencies": {
     "nodemon": "^3.1.10"
