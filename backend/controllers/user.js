@@ -70,6 +70,63 @@ class UserController extends GlobalController {
             res.status(500).json({ error: err.message });
         }
     };
-}
+
+    // Obtener todos los usuarios
+    async getAll(req, res) {
+        try {
+            const users = await User.find();
+            res.status(200).json(users);
+        } catch (err) {
+            console.error("Error en getAll:", err);
+            res.status(500).json({ error: "Error al obtener usuarios" });
+        }
+    };
+
+    // Obtener usuario por ID
+    async read(req, res) {
+        try {
+            const user = await User.findById(req.params.id);
+            if (!user) return res.status(404).json({ error: "❌ Usuario no encontrado" });
+
+            res.status(200).json(user);
+        } catch (err) {
+            console.error("Error en read:", err);
+            res.status(500).json({ error: "Error al obtener usuario" });
+        }
+    };
+
+    // Actualizar usuario
+    async update(req, res) {
+        try {
+            const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+            if (!updatedUser) return res.status(404).json({ error: "❌ Usuario no encontrado" });
+
+            res.status(200).json(updatedUser);
+        } catch (err) {
+            console.error("Error en update:", err);
+            res.status(500).json({ error: "Error al actualizar usuario" });
+        }
+    };
+
+    // 🔥 Nuevo: Eliminar usuario (libre)
+    async delete(req, res) {
+        try {
+            const deletedUser = await User.findByIdAndDelete(req.params.id);
+
+            if (!deletedUser) {
+                return res.status(404).json({ error: "❌ Usuario no encontrado" });
+            }
+
+            res.status(200).json({
+                message: "✅ Usuario eliminado correctamente",
+                user: deletedUser
+            });
+        } catch (err) {
+            console.error("Error en delete:", err);
+            res.status(500).json({ error: "Error al eliminar usuario" });
+        }
+    }
+};
 
 module.exports = new UserController();
+
