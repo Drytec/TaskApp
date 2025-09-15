@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('.signup-form');
     const firstNameInput = document.getElementById('firstName');
@@ -25,11 +26,16 @@ document.addEventListener('DOMContentLoaded', function() {
         const toastMessage = toast.querySelector('.toast-message');
         
         toastMessage.textContent = message;
-        toast.className = `toast ${type}`;
-        toast.style.display = 'block';
+        toast.classList.remove('show');
+        toast.classList.remove('error');
+        toast.classList.remove('success');
+        
+        toast.classList.add('toast');
+        toast.classList.add(type);
+        toast.classList.add('show');
         
         setTimeout(() => {
-            toast.style.display = 'none';
+            toast.classList.remove('show');
         }, 3000);
     }
 
@@ -48,7 +54,7 @@ document.addEventListener('DOMContentLoaded', function() {
             special: /[!@#$%^&*]/.test(password)
         };
         
-        
+        // Actualizar visualmente cada requisito
         Object.keys(checks).forEach(key => {
             if (checks[key]) {
                 requirements[key].classList.add('met');
@@ -57,7 +63,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         });
 
-        
+        // Devolver true solo si todos los requisitos se cumplen
         return Object.values(checks).every(check => check);
     }
 
@@ -188,7 +194,7 @@ document.addEventListener('DOMContentLoaded', function() {
         spinner.classList.add('hidden');
 
         if (result.success) {
-            showToast('¡Registro exitoso! Redirigiendo al login...', 'success');
+            showToast('Cuenta creada con éxito', 'success');
             setTimeout(() => {
                 window.location.href = '/login';
             }, 2000);

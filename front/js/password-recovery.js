@@ -1,5 +1,5 @@
 // password-recovery.js
-const API_URL = 'http://localhost:5100/api';
+const API_URL = "/api"; 
 
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('form');

@@ -1,4 +1,5 @@
 
+
 document.addEventListener('DOMContentLoaded', function() {
     const form = document.querySelector('.login-form');
     const emailInput = document.getElementById('email');
