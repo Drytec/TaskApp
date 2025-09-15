@@ -56,20 +56,36 @@ class UserController extends GlobalController {
         }
     };
 
-    editUser = async (req, res) => {
-  try {
-    const userId = req.params.id;
-    const { name, lastname, age } = req.body; // solo permitimos estos campos
+editUser = async (req, res) => {
+    
+    try {
+        const userId = req.params.id;const { name, lastname, age, email, password } = req.body;
 
-    const updates = { name, lastname, age };
+                        
+            if (email !== undefined || password !== undefined) {
+                return res.status(400).json({ error: "Campos no permitidos: edite solo nombre, apellido y edad" });
+                }
 
-    const user = await User.findByIdAndUpdate(userId, updates, { new: true });
-    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+        
+        const updates = {};
+        if (name) updates.name = name;
+        if (lastname) updates.lastname = lastname;
+        if (age) updates.age = age;
 
-    res.json({ message: "Información del usuario actualizada", user });
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+        
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: "No hay campos válidos para actualizar" });
+        }
+
+        const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        res.json({ message: "Información del usuario actualizada", user });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 };
 
 }
