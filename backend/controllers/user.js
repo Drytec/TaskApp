@@ -1,4 +1,4 @@
-
+// controllers/user.js
 const GlobalController = require("./globalController.js");
 const UserDAO = require("../DAO/userDAO.js");
 const jwt = require("jsonwebtoken");
@@ -60,6 +60,7 @@ class UserController extends GlobalController {
             res.status(500).json({error: err.message});
         }
     };
+
     loginUser = async (req, res) => {
         try {
             const {email, password} = req.body;
@@ -81,5 +82,50 @@ class UserController extends GlobalController {
             res.status(500).json({error: err.message});
         }
     };
+
+editUser = async (req, res) => {
+    
+    try {
+        const userId = req.params.id;const { name, lastname, age, email, password } = req.body;
+
+                        
+            if (email !== undefined) {
+                return res.status(400).json({ error: "campo no editable" });
+                }
+
+        
+        const updates = {};
+        if (name) updates.name = name;
+        if (lastname) updates.lastname = lastname;
+        if (age) updates.age = age;
+        if (password) {
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                return res.status(400).json({
+                    error:
+                        "La contraseña debe tener mínimo 8 caracteres, incluir mayúscula, minúscula y número"
+                });
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updates.password = hashedPassword;
+        }
+
+        
+        if (Object.keys(updates).length === 0) {
+            return res.status(400).json({ error: "No hay campos válidos para actualizar" });
+        }
+
+        const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        res.json({ message: "Información del usuario actualizada", user });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
+
 }
+
 module.exports = new UserController();

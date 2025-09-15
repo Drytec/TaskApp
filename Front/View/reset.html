@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Restablecer contraseña</title>
+  <link rel="stylesheet" href="../CSS/styles.css">
+</head>
+<body>
+  <main class="container">
+    <h1>Restablecer contraseña</h1>
+    <form id="resetForm">
+      <label for="newPassword">Nueva contraseña</label>
+      <input type="password" id="newPassword" name="newPassword" required />
+
+      <label for="confirmPassword">Confirmar contraseña</label>
+      <input type="password" id="confirmPassword" name="confirmPassword" required />
+
+      <button type="submit">Restablecer</button>
+    </form>
+
+    <div id="toast" role="status" aria-live="polite" class="toast"></div>
+  </main>
+
+  <script src="../JS/reset.js" type="module"></script>
+</body>
+</html>
