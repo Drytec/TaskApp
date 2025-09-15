@@ -62,8 +62,8 @@ editUser = async (req, res) => {
         const userId = req.params.id;const { name, lastname, age, email, password } = req.body;
 
                         
-            if (email !== undefined || password !== undefined) {
-                return res.status(400).json({ error: "Campos no permitidos: edite solo nombre, apellido y edad" });
+            if (email !== undefined) {
+                return res.status(400).json({ error: "campo no editable" });
                 }
 
         
@@ -71,6 +71,17 @@ editUser = async (req, res) => {
         if (name) updates.name = name;
         if (lastname) updates.lastname = lastname;
         if (age) updates.age = age;
+        if (password) {
+            const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
+            if (!passwordRegex.test(password)) {
+                return res.status(400).json({
+                    error:
+                        "La contraseña debe tener mínimo 8 caracteres, incluir mayúscula, minúscula y número"
+                });
+            }
+            const hashedPassword = await bcrypt.hash(password, 10);
+            updates.password = hashedPassword;
+        }
 
         
         if (Object.keys(updates).length === 0) {
