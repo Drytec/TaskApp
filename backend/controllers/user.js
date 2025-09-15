@@ -55,6 +55,23 @@ class UserController extends GlobalController {
             res.status(500).json({error: err.message});
         }
     };
+
+    editUser = async (req, res) => {
+  try {
+    const userId = req.params.id;
+    const { name, lastname, age } = req.body; // solo permitimos estos campos
+
+    const updates = { name, lastname, age };
+
+    const user = await User.findByIdAndUpdate(userId, updates, { new: true });
+    if (!user) return res.status(404).json({ error: "Usuario no encontrado" });
+
+    res.json({ message: "Información del usuario actualizada", user });
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
+};
+
 }
 
 module.exports = new UserController();
