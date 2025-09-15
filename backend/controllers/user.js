@@ -11,10 +11,33 @@ class UserController extends GlobalController {
     constructor() {
         super(UserDAO);
     }
+    
+    getCurrentUser = async (req, res) => {
+        try {
+            const userId = req.user.id;
+            const user = await User.findById(userId).select('-password');
+            
+            if (!user) {
+                return res.status(404).json({ error: "Usuario no encontrado" });
+            }
+            
+            res.json(user);
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    };
 
     registerUser = async (req, res) => {
         try {
             const {email, password, name, lastname, age} = req.body;
+
+            // Verificar si el correo ya existe
+            const existingUser = await User.findOne({ email });
+            if (existingUser) {
+                return res.status(400).json({
+                    error: "Este correo ya está registrado"
+                });
+            }
 
             const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$/;
             if (!passwordRegex.test(password)) {
@@ -30,6 +53,10 @@ class UserController extends GlobalController {
 
             res.status(201).json({message: "Usuario registrado exitosamente"});
         } catch (err) {
+            // Verificar si es un error de duplicación de MongoDB
+            if (err.code === 11000) {
+                return res.status(400).json({error: "Este correo ya está registrado"});
+            }
             res.status(500).json({error: err.message});
         }
     };
