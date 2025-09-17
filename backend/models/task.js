@@ -8,8 +8,8 @@ const TaskSchema = new mongoose.Schema(
             isImportant: {type: Boolean, default: false},
             dateCreated: {type: Date, default: Date.now},
             dateCompleted: {type: Date, default: Date.now},
-            dueDate: {type: String, default: null},
-            dueTime: {type: String},
+            dueDate: { type: String, default: null },
+            dueTime: { type: String, default: null },
             status: {type: String, enum: ['Por hacer', 'Haciendo', 'Hecho'], default: 'Por hacer'},
             user: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }
     }

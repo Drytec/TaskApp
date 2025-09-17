@@ -8,7 +8,12 @@ class TaskController extends GlobalController {
     createTask = async (req, res) => {
         try {
             const userId = req.user.id;
-            const taskData = { ...req.body, user: userId };
+            const taskData = {
+                ...req.body,
+                user: userId,
+                dueDate: req.body.dueDate, 
+                dueTime: req.body.dueTime
+            };
 
             // Mantener la fecha como string para evitar problemas de zona horaria
             // No convertir a Date, mantener como string "YYYY-MM-DD"
