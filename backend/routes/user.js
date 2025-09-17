@@ -14,17 +14,22 @@ const router = express.Router();
  *       properties:
  *         id:
  *           type: string
- *           description: ID auto-generado del usuario
+ *           description: Auto-generated user ID
  *         name:
  *           type: string
+ *           description: User's first name
  *         lastname:
  *           type: string
+ *           description: User's last name
  *         email:
  *           type: string
+ *           description: User's email address
  *         password:
  *           type: string
+ *           description: User's password
  *         age:
  *           type: number
+ *           description: User's age
  *       example:
  *         id: 123456789
  *         name: James
@@ -38,7 +43,7 @@ const router = express.Router();
  * @swagger
  * /users/register:
  *   post:
- *     summary: Registrar un nuevo usuario
+ *     summary: Register a new user
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -48,11 +53,11 @@ const router = express.Router();
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       201:
- *         description: Usuario registrado exitosamente
+ *         description: User successfully registered
  *       400:
- *         description: Datos inválidos
+ *         description: Invalid data
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.post("/register", UserController.registerUser);
 
@@ -60,7 +65,7 @@ router.post("/register", UserController.registerUser);
  * @swagger
  * /users/login:
  *   post:
- *     summary: Iniciar sesión de usuario
+ *     summary: User login
  *     tags: [Users]
  *     requestBody:
  *       required: true
@@ -78,13 +83,13 @@ router.post("/register", UserController.registerUser);
  *               password: Password123
  *     responses:
  *       200:
- *         description: Login exitoso con token JWT
+ *         description: Successful login with JWT token
  *       400:
- *         description: Datos inválidos
+ *         description: Invalid data
  *       401:
- *         description: Credenciales incorrectas
+ *         description: Incorrect credentials
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.post("/login", UserController.loginUser);
 
@@ -92,13 +97,13 @@ router.post("/login", UserController.loginUser);
  * @swagger
  * /users:
  *   get:
- *     summary: Obtener todos los usuarios
+ *     summary: Get all users
  *     tags: [Users]
  *     responses:
  *       200:
- *         description: Lista de usuarios
+ *         description: List of users
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.get("/", (req, res) => UserController.getAll(req, res));
 
@@ -106,7 +111,7 @@ router.get("/", (req, res) => UserController.getAll(req, res));
  * @swagger
  * /users/{id}:
  *   get:
- *     summary: Obtener un usuario por ID
+ *     summary: Get a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -114,14 +119,14 @@ router.get("/", (req, res) => UserController.getAll(req, res));
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del usuario
+ *         description: User ID
  *     responses:
  *       200:
- *         description: Usuario encontrado
+ *         description: User found
  *       404:
- *         description: Usuario no encontrado
+ *         description: User not found
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.get("/:id", (req, res) => UserController.read(req, res));
 
@@ -129,7 +134,7 @@ router.get("/:id", (req, res) => UserController.read(req, res));
  * @swagger
  * /users/{id}:
  *   put:
- *     summary: Actualizar un usuario por ID
+ *     summary: Update a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -137,7 +142,7 @@ router.get("/:id", (req, res) => UserController.read(req, res));
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del usuario
+ *         description: User ID
  *     requestBody:
  *       required: true
  *       content:
@@ -146,13 +151,13 @@ router.get("/:id", (req, res) => UserController.read(req, res));
  *             $ref: '#/components/schemas/User'
  *     responses:
  *       200:
- *         description: Usuario actualizado
+ *         description: User successfully updated
  *       400:
- *         description: Datos inválidos
+ *         description: Invalid data
  *       404:
- *         description: Usuario no encontrado
+ *         description: User not found
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.put("/:id", (req, res) => UserController.update(req, res));
 
@@ -160,7 +165,7 @@ router.put("/:id", (req, res) => UserController.update(req, res));
  * @swagger
  * /users/{id}:
  *   delete:
- *     summary: Eliminar un usuario por ID
+ *     summary: Delete a user by ID
  *     tags: [Users]
  *     parameters:
  *       - in: path
@@ -168,16 +173,15 @@ router.put("/:id", (req, res) => UserController.update(req, res));
  *         required: true
  *         schema:
  *           type: string
- *         description: ID del usuario
+ *         description: User ID
  *     responses:
  *       200:
- *         description: Usuario eliminado
+ *         description: User successfully deleted
  *       404:
- *         description: Usuario no encontrado
+ *         description: User not found
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.delete("/:id", (req, res) => UserController.delete(req, res));
 
 module.exports = router;
-

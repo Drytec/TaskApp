@@ -13,25 +13,25 @@ const router = express.Router();
  *       properties:
  *         id:
  *           type: string
- *           description: ID auto-generado de la tarea
+ *           description: Auto-generated task ID
  *         title:
  *           type: string
- *           description: Título de la tarea
+ *           description: Task title
  *         description:
  *           type: string
- *           description: Descripción detallada de la tarea
+ *           description: Detailed description of the task
  *         status:
  *           type: string
  *           enum: [pending, in-progress, completed]
- *           description: Estado de la tarea
+ *           description: Current status of the task
  *         dueDate:
  *           type: string
  *           format: date
- *           description: Fecha de vencimiento
+ *           description: Task due date
  *       example:
  *         id: 987654321
- *         title: Entregar informe
- *         description: Preparar y enviar el informe semanal
+ *         title: Submit report
+ *         description: Prepare and send the weekly report
  *         status: pending
  *         dueDate: 2025-09-30
  */
@@ -40,7 +40,7 @@ const router = express.Router();
  * @swagger
  * /tasks:
  *   post:
- *     summary: Crear una nueva tarea
+ *     summary: Create a new task
  *     tags: [Tasks]
  *     requestBody:
  *       required: true
@@ -50,11 +50,11 @@ const router = express.Router();
  *             $ref: '#/components/schemas/Task'
  *     responses:
  *       201:
- *         description: Tarea creada exitosamente
+ *         description: Task successfully created
  *       400:
- *         description: Datos inválidos
+ *         description: Invalid data
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.post("/", TaskController.createTask);
 
@@ -62,13 +62,13 @@ router.post("/", TaskController.createTask);
  * @swagger
  * /tasks:
  *   get:
- *     summary: Obtener todas las tareas
+ *     summary: Get all tasks
  *     tags: [Tasks]
  *     responses:
  *       200:
- *         description: Lista de tareas
+ *         description: List of tasks
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.get("/", TaskController.getAllTasks);
 
@@ -76,7 +76,7 @@ router.get("/", TaskController.getAllTasks);
  * @swagger
  * /tasks/{id}:
  *   get:
- *     summary: Obtener una tarea por ID
+ *     summary: Get a task by ID
  *     tags: [Tasks]
  *     parameters:
  *       - in: path
@@ -84,14 +84,14 @@ router.get("/", TaskController.getAllTasks);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la tarea
+ *         description: Task ID
  *     responses:
  *       200:
- *         description: Tarea encontrada
+ *         description: Task found
  *       404:
- *         description: Tarea no encontrada
+ *         description: Task not found
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.get("/:id", TaskController.getTaskById);
 
@@ -99,7 +99,7 @@ router.get("/:id", TaskController.getTaskById);
  * @swagger
  * /tasks/{id}:
  *   put:
- *     summary: Actualizar una tarea por ID
+ *     summary: Update a task by ID
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -109,7 +109,7 @@ router.get("/:id", TaskController.getTaskById);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la tarea
+ *         description: Task ID
  *     requestBody:
  *       required: true
  *       content:
@@ -118,13 +118,13 @@ router.get("/:id", TaskController.getTaskById);
  *             $ref: '#/components/schemas/Task'
  *     responses:
  *       200:
- *         description: Tarea actualizada
+ *         description: Task successfully updated
  *       400:
- *         description: Datos inválidos
+ *         description: Invalid data
  *       404:
- *         description: Tarea no encontrada
+ *         description: Task not found
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.put("/:id", TaskController.updateTask);
 
@@ -132,7 +132,7 @@ router.put("/:id", TaskController.updateTask);
  * @swagger
  * /tasks/{id}:
  *   delete:
- *     summary: Eliminar una tarea por ID
+ *     summary: Delete a task by ID
  *     tags: [Tasks]
  *     security:
  *       - bearerAuth: []
@@ -142,17 +142,15 @@ router.put("/:id", TaskController.updateTask);
  *         required: true
  *         schema:
  *           type: string
- *         description: ID de la tarea
+ *         description: Task ID
  *     responses:
  *       200:
- *         description: Tarea eliminada
+ *         description: Task successfully deleted
  *       404:
- *         description: Tarea no encontrada
+ *         description: Task not found
  *       500:
- *         description: Error interno del servidor
+ *         description: Internal server error
  */
 router.delete("/:id", TaskController.deleteTask);
 
 module.exports = router;
-
-

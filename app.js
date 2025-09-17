@@ -43,29 +43,29 @@ app.get("/dashboard", (req, res) => res.sendFile(path.join(__dirname, "Front", "
 app.get("/task", (req, res) => res.sendFile(path.join(__dirname, "Front", "View", "task.html")));
 app.get("/new-task", (req, res) => res.sendFile(path.join(__dirname, "Front", "View", "new-task.html")));
 
-// Swagger configuración
+// Swagger configuration
 const options = {
   definition: {
     openapi: "3.0.0",
     info: {
       title: "MiniProyecto1 API",
       version: "1.0.0",
-      description: "API de gestión de usuarios y tareas con Node.js, Express y MongoDB",
+      description: "API for managing users and tasks with Node.js, Express, and MongoDB",
     },
     servers: [
       {
         url: "http://localhost:5100/api",
-        description: "Servidor local",
+        description: "Local server",
       },
     ],
     tags: [
       {
         name: "Users",
-        description: "Operaciones relacionadas con usuarios",
+        description: "Operations related to users",
       },
       {
         name: "Tasks",
-        description: "Operaciones relacionadas con tareas",
+        description: "Operations related to tasks",
       },
     ],
     components: {
@@ -83,28 +83,28 @@ const options = {
       },
     ],
   },
-  apis: ["./backend/routes/*.js"], // tus endpoints documentados 
+  apis: ["./backend/routes/*.js"], // your documented endpoints
 };
 
 const swaggerSpec = swaggerJsdoc(options);
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerSpec));
 
-// Rutas API
+// API Routes
 app.use("/api/users", userRoutes);
 
-// Manejo de errores 404
+// 404 Error handling
 app.use((req, res) => {
-    res.status(404).send(`No se encontró la ruta ${req.path}`);
+  res.status(404).send(`Route ${req.path} not found`);
 });
 
-// Conectar a la BD
+// Connect to DB
 connectDB();
 
-// Iniciar servidor
+// Start server
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
-    console.log(`Servidor corriendo en http://localhost:${port}`);
-    console.log(`Documentación en http://localhost:${port}/api-docs`);
+  console.log(`Server running at http://localhost:${port}`);
+  console.log(`Documentation available at http://localhost:${port}/api-docs`);
 });
 
 module.exports = app;
