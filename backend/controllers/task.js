@@ -12,7 +12,9 @@ class TaskController extends GlobalController {
             const taskData = {
                 ...req.body,
                 user: userId,
+                dueDateTime: `${req.body.dueDate}T${req.body.dueTime}:00`, // ejemplo: 2025-10-23T14:30:00
             };
+
 
             // 👇 Forzar formato YYYY-MM-DD si viene con hora
             if (taskData.dueDate) {
