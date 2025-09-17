@@ -8,16 +8,12 @@ class TaskController extends GlobalController {
     createTask = async (req, res) => {
         try {
             const userId = req.user.id;
-            const taskData = {
-                ...req.body,
-                user: userId,
-                dueDate: req.body.dueDate, 
-                dueTime: req.body.dueTime
-            };
+            const taskData = { ...req.body, user: userId };
 
-            // Mantener la fecha como string para evitar problemas de zona horaria
-            // No convertir a Date, mantener como string "YYYY-MM-DD"
-
+            // 👇 Forzar que dueDate quede como string simple
+            if (taskData.dueDate) {
+                taskData.dueDate = taskData.dueDate.split("T")[0];
+            }
 
             const task = await taskDAO.create(taskData);
             res.status(201).json(task);
@@ -36,18 +32,18 @@ class TaskController extends GlobalController {
     };
     editTask = async (req, res) => {
         try {
-            const userId = req.user.id;
-            const taskId = req.params.id;
             const updates = req.body;
 
-            // Mantener la fecha como string para evitar problemas de zona horaria
-            // No convertir a Date, mantener como string "YYYY-MM-DD"
+            if (updates.dueDate) {
+                updates.dueDate = updates.dueDate.split("T")[0];
+            }
 
-            const updatedTask = await taskDAO.update(taskId, updates);
+            const updatedTask = await taskDAO.update(req.params.id, updates);
             res.json(updatedTask);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     };
+
 }
 module.exports = new TaskController();
