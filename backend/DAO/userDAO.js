@@ -1,7 +1,16 @@
+/**
+ * @file userDAO.js
+ * @description DAO class for User model, extending GlobalDAO.
+ */
+
 const User = require("../models/user.js");
 const GlobalDAO = require("./globalDAO.js");
 
-class UserDAO extends GlobalDAO{
+/**
+ * DAO class to handle CRUD operations for the User model.
+ * Inherits all methods from GlobalDAO.
+ */
+class UserDAO extends GlobalDAO {
     constructor() {
         super(User);
     }
