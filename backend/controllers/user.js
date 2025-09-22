@@ -125,6 +125,24 @@ editUser = async (req, res) => {
         res.status(500).json({ error: err.message });
     }
 };
+   deleteUser = async (req, res) => {
+    try {
+        const userId = req.params.id;
+
+        if (req.user.id !== userId) {
+            return res.status(403).json({ error: "No autorizado para eliminar esta cuenta" });
+        }
+
+        const user = await User.findByIdAndDelete(userId);
+        if (!user) {
+            return res.status(404).json({ error: "Usuario no encontrado" });
+        }
+
+        res.json({ message: "Cuenta de usuario eliminada" });
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
+};
 
 }
 
