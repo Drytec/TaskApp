@@ -26,8 +26,7 @@ exports.requestPasswordReset = async (req, res) => {
         user.resetPasswordExpires = Date.now() + 60 * 60 * 1000; // 1 hora
         await user.save();
 
-        const resetUrl = `${process.env.FRONTEND_URL || "http://localhost:5173"}/reset-password.html?token=${resetToken}`;
-        
+        const resetUrl = `https://task-app-front-mu.vercel.app/reset-password?token=${resetToken}`;
 
         const html = `
       <p>Hola ${user.name},</p>

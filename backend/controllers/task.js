@@ -35,14 +35,32 @@ class TaskController extends GlobalController {
             const taskId = req.params.id;
             const updates = req.body;
 
-            // Mantener la fecha como string para evitar problemas de zona horaria
-            // No convertir a Date, mantener como string "YYYY-MM-DD"
-
             const updatedTask = await taskDAO.update(taskId, updates);
             res.json(updatedTask);
         } catch (err) {
             res.status(500).json({ error: err.message });
         }
     };
+    deleteTask = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const taskId = req.params.id;
+
+        const task = await taskDAO.getById(taskId);
+            if (!task) {
+                return res.status(404).json({ message: "Tarea no encontrada" });
+            }
+
+            if (task.userId !== userId) {
+                return res.status(403).json({ message: "No autorizado" });
+            }
+
+        await taskDAO.delete(taskId);
+            res.json({ message: "Tarea eliminada" });
+        } catch (err) {
+            res.status(500).json({ error: err.message });
+        }
+    };
+
 }
 module.exports = new TaskController();
