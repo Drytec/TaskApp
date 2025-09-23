@@ -3,10 +3,12 @@
   "version": "1.0.0",
   "description": "back for task creator",
   "main": "app.js",
+  "type": "commonjs",
   "scripts": {
     "start": "node app.js",
     "build": "echo \"no build\"",
-    "dev": "nodemon app.js"
+    "dev": "nodemon app.js",
+    "docs": "jsdoc -c jsdoc.json"
   },
   "author": "",
   "license": "ISC",
@@ -21,6 +23,7 @@
     "nodemailer": "^7.0.6"
   },
   "devDependencies": {
+    "jsdoc": "^4.0.4",
     "nodemon": "^3.1.10"
   }
 }
