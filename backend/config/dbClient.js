@@ -1,4 +1,3 @@
-//Here the DBA will create the connection to db
 
 /**
  * @file db.js
