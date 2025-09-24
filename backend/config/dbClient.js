@@ -28,6 +28,9 @@ const connectDB = async () => {
     }
 };
 
+module.exports = { connectDB, disconnectDB };
+
+
 /**
  * Disconnects the application from MongoDB.
  * 
