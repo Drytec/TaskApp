@@ -28,7 +28,7 @@ const connectDB = async () => {
     }
 };
 
-module.exports = { connectDB, disconnectDB };
+
 
 
 /**
@@ -47,4 +47,5 @@ const disconnectDB = async () => {
         console.error("Error disconnecting from MongoDB:", error.message);
         throw error; // <-- Esto es importante para que JSDoc se cumpla
     }
-};
+}; 
+module.exports = { connectDB, disconnectDB };
