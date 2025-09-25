@@ -1,0 +1,12 @@
+{
+  "source": {
+    "include": ["backend/controllers", "backend/routes", "backend/DAO", "backend/models"],
+    "includePattern": ".js$",
+    "excludePattern": "(node_modules|docs)"
+  },
+  "opts": {
+    "destination": "./docs",
+    "recurse": true
+  }
+}
+
