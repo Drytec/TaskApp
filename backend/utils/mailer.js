@@ -8,18 +8,30 @@ const transporter = nodemailer.createTransport({
     }
 });
 
+/**
+ * Send an email using the configured transporter.
+ * 
+ * @async
+ * @function sendEmail
+ * @param {string} to - Recipient's email address.
+ * @param {string} subject - Email subject.
+ * @param {string} html - HTML content of the email body.
+ * @returns {Promise<void>} Resolves when the email has been sent.
+ * @throws {Error} If sending the email fails.
+ */
 async function sendEmail(to, subject, html) {
     try {
         await transporter.sendMail({
-            from: `"Soporte App" <${process.env.EMAIL_USER}>`,
+            from: `"Support App" <${process.env.EMAIL_USER}>`,
             to,
             subject,
             html
         });
-        console.log("📨 Correo enviado correctamente");
+        console.log("📨 Email sent successfully");
     } catch (err) {
-        console.error("❌ Error enviando correo:", err);
+        console.error("❌ Error sending email:", err);
     }
 }
 
 module.exports = sendEmail;
+
