@@ -48,4 +48,6 @@ const disconnectDB = async () => {
         throw error; // <-- Esto es importante para que JSDoc se cumpla
     }
 }; 
+
 module.exports = { connectDB, disconnectDB };
+
